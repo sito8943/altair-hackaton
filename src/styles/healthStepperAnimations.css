@@ -87,7 +87,16 @@
 .hsf-form-panel {
   border: none;
   background: transparent;
-  padding: 0;
+  padding-top: 16px;
+  position: relative;
+}
+
+.hsf-reset-wrapper {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .hsf-stepper--vertical .MuiStepLabel-root {
