@@ -142,7 +142,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
             >
               Stress Level (0-10)
             </Typography>
-            <Stack direction="row" gap={3}>
+            <Stack direction="row" gap={3} px={3}>
               <Slider
                 name="stress_level"
                 value={values.stress_level}
@@ -156,8 +156,8 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                   values.stress_level >= 7
                     ? "error"
                     : values.stress_level >= 4
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
                 sx={{
                   flexGrow: 1,
