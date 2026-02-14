@@ -401,10 +401,10 @@ const ResultView = () => {
                 </CardContent>
               </Card>
 
-              {/* Row 2 · Disease risk cards span 4/12 (~33%) */}
+              {/* Row 2 · Disease risk cards span full width */}
               <Box
                 sx={{
-                  ...gridColumnSpan(4),
+                  ...gridColumnSpan(12),
                   display: "flex",
                   flexDirection: "column",
                   gap: 1.5,
@@ -426,7 +426,7 @@ const ResultView = () => {
                     ? TrendingUpIcon
                     : TrendingDownIcon;
                   return (
-                    <Grid item xs={12} sm={6} md={4} key={disease.disease}>
+                    <Grid item xs={12} key={disease.disease}>
                       <Card elevation={0} sx={panelCardSx}>
                         <CardContent>
                           <Stack
@@ -487,7 +487,7 @@ const ResultView = () => {
               </Grid>
             </Box>
 
-              {/* Row 2 · Risk radar spans 4/12 (~33%) */}
+              {/* Row 3 · Risk radar spans 4/12 (~33%) */}
               <Card elevation={0} sx={cardPlacementSx(4, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -536,7 +536,7 @@ const ResultView = () => {
                   </Typography>
                 </CardContent>
               </Card>
-              {/* Row 2 · What-if simulator spans 4/12 (~34%) */}
+              {/* Row 3 · What-if simulator spans 4/12 (~34%) */}
               <Card elevation={0} sx={cardPlacementSx(4, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -610,7 +610,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
 
-              {/* Row 3 · Disease explainability spans 7/12 (~60%) */}
+              {/* Row 4 · Disease explainability spans 7/12 (~60%) */}
               <Card elevation={0} sx={cardPlacementSx(7)}>
                 <CardContent>
                   <Stack spacing={2}>
@@ -700,7 +700,7 @@ const ResultView = () => {
                   </Stack>
                 </CardContent>
               </Card>
-              {/* Row 3 · Data quality spans 5/12 (~40%) */}
+              {/* Row 4 · Data quality spans 5/12 (~40%) */}
               <Card elevation={0} sx={cardPlacementSx(5)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -739,7 +739,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
 
-              {/* Row 4 · Fairness metrics spans 6/12 (~50%) */}
+              {/* Row 5 · Fairness metrics spans 6/12 (~50%) */}
               <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -778,7 +778,7 @@ const ResultView = () => {
                   </Stack>
                 </CardContent>
               </Card>
-              {/* Row 4 · Vital signals spans 6/12 (~50%) */}
+              {/* Row 5 · Vital signals spans 6/12 (~50%) */}
               <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -814,7 +814,7 @@ const ResultView = () => {
                   </Stack>
                 </CardContent>
               </Card>
-              {/* Row 5 · Actionable recommendations span full width */}
+              {/* Row 6 · Actionable recommendations span full width */}
               <Card elevation={0} sx={cardPlacementSx(12)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
