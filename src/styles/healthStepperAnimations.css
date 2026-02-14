@@ -64,6 +64,11 @@
   animation: hsfFadeIn 360ms var(--hsf-ease) both;
 }
 
+.hsf-field-animated {
+  animation: hsfFieldFade 420ms var(--hsf-ease) both;
+  animation-delay: 90ms;
+}
+
 .hsf-form .MuiFormControl-root,
 .hsf-form .MuiAutocomplete-root,
 .hsf-form .MuiSlider-root {
@@ -129,6 +134,7 @@
   .hsf-stepper .hsf-step,
   .hsf-icon-button,
   .hsf-alert,
+  .hsf-field-animated,
   .hsf-form .MuiFormControl-root,
   .hsf-form .MuiAutocomplete-root,
   .hsf-form .MuiSlider-root,

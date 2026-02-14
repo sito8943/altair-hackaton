@@ -37,10 +37,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
   };
 
   return (
-    <Card
-      elevation={0}
-      sx={glassPanelCardSx}
-    >
+    <Card elevation={0} sx={glassPanelCardSx}>
       <CardContent sx={{ p: { xs: 3, md: 4 } }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
           Lifestyle &amp; Mental Health
@@ -128,11 +125,11 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               variant="subtitle2"
               color="text.secondary"
               sx={{ mb: 1 }}
+              className="hsf-field-animated"
             >
               Stress Level (0-10)
             </Typography>
             <Stack direction="row" gap={3}>
-              <SentimentSatisfiedAltIcon />
               <Slider
                 name="stress_level"
                 value={values.stress_level}
@@ -161,7 +158,6 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                   "& .MuiSlider-markLabel:last-of-type": { mr: 4 },
                 }}
               />
-              <SentimentVeryDissatisfiedIcon />
             </Stack>
             {errors.stress_level && (
               <Typography variant="caption" color="error">
