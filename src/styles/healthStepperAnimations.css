@@ -237,6 +237,20 @@
   }
 }
 
+.card-reveal {
+  opacity: 0.01;
+  transform: translate3d(0, 36px, 0) scale(0.97);
+  transition: opacity 680ms var(--hsf-ease) 80ms,
+    transform 680ms var(--hsf-ease) 80ms;
+  transform-origin: center top;
+  will-change: opacity, transform;
+}
+
+.card-reveal-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hsf-step-panel,
   .hsf-stepper-panel,
@@ -249,8 +263,11 @@
   .hsf-form .MuiAutocomplete-root,
   .hsf-form .MuiSlider-root,
   .hsf-step-panel-transition-enter-active,
-  .hsf-step-panel-transition-exit-active {
+  .hsf-step-panel-transition-exit-active,
+  .card-reveal {
     animation: none !important;
     transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
