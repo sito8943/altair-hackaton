@@ -4,12 +4,15 @@ import {
   Alert,
   Box,
   Button,
+  Fade,
   Stack,
   Step,
   StepLabel,
   Stepper,
+  Typography,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import type { StepIconProps } from "@mui/material/StepIcon";
 import StepDemographics from "./StepDemographics";
 import StepVitals from "./StepVitals";
 import StepLifestyle from "./StepLifestyle";
@@ -112,12 +115,30 @@ const steps: StepDefinition[] = [
   },
 ];
 
+const StepDot = ({ active, completed, className }: StepIconProps) => (
+  <Box
+    component="span"
+    className={className}
+    sx={{
+      width: 12,
+      height: 12,
+      borderRadius: "50%",
+      border: "2px solid #0f4c81",
+      backgroundColor: active || completed ? "#0f4c81" : "transparent",
+      transition: "all 0.3s ease",
+      display: "inline-flex",
+    }}
+  />
+);
+
 const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const derivedStep = routeMap.indexOf(location.pathname);
   const activeStep = derivedStep === -1 ? 0 : derivedStep;
-  const [values, setValues] = useState<HealthFormValues>(() => loadStoredValues());
+  const [values, setValues] = useState<HealthFormValues>(() =>
+    loadStoredValues()
+  );
   const [errors, setErrors] = useState<HealthFormErrors>({});
   const [formMessage, setFormMessage] = useState("");
 
@@ -222,19 +243,16 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
 
   return (
     <Box component="section" aria-label="Health data intake form">
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }} alternativeLabel>
-        {steps.map((step) => (
-          <Step key={step.label}>
-            <StepLabel>{step.label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
       <Box component="form" onSubmit={handleSubmit} noValidate>
-        <CurrentStepComponent
-          values={values}
-          onChange={updateField}
-          errors={errors}
-        />
+        <Fade key={activeStep} in timeout={500}>
+          <Box>
+            <CurrentStepComponent
+              values={values}
+              onChange={updateField}
+              errors={errors}
+            />
+          </Box>
+        </Fade>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}
@@ -282,6 +300,60 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             {formMessage}
           </Alert>
         )}
+      </Box>
+      <Box mt={4}>
+        <Stepper
+          activeStep={activeStep}
+          alternativeLabel
+          connector={null}
+          sx={{ justifyContent: "center" }}
+        >
+          {steps.map((step, index) => (
+            <Step
+              key={step.label}
+              sx={{
+                flex: 1,
+                px: 1,
+                "& .MuiStepLabel-root": {
+                  cursor: "pointer",
+                  alignItems: "center",
+                },
+                "& .MuiStepIcon-root": {
+                  transform: activeStep === index ? "scale(1.4)" : "scale(1)",
+                },
+                "&:hover .MuiStepIcon-root": {
+                  transform: "scale(1.4)",
+                },
+                "& .step-label-text": {
+                  opacity: activeStep === index ? 1 : 0,
+                  transform:
+                    activeStep === index ? "translateY(0)" : "translateY(8px)",
+                  transition: "all 0.3s ease",
+                  pointerEvents: "none",
+                },
+                "&:hover .step-label-text": {
+                  opacity: 1,
+                  transform: "translateY(0)",
+                },
+              }}
+            >
+              <StepLabel StepIconComponent={StepDot}>
+                <Stack
+                  className="step-label-text"
+                  spacing={0.3}
+                  alignItems="center"
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    Step {index + 1}
+                  </Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    {step.label}
+                  </Typography>
+                </Stack>
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
       </Box>
     </Box>
   );

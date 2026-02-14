@@ -35,9 +35,35 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
     onChange("stress_level", resolvedValue);
   };
 
+  const fieldStyles = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 3,
+      backgroundColor: "#fff",
+      transition: "all 0.3s ease",
+      "& fieldset": { borderColor: "#e4ecf7" },
+      "&:hover fieldset": { borderColor: "#0f4c81" },
+      "&.Mui-focused fieldset": {
+        borderColor: "#0f4c81",
+        boxShadow: "0 0 0 3px rgba(15,76,129,0.08)",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      fontWeight: 600,
+    },
+  };
+
   return (
-    <Card elevation={0} sx={{ borderRadius: 1 }}>
-      <CardContent>
+    <Card
+      elevation={0}
+      sx={{
+        borderRadius: 1,
+        border: '1px solid rgba(255,255,255,0.4)',
+        background: 'rgba(255,255,255,0.55)',
+        backdropFilter: 'blur(14px)',
+        boxShadow: '0 25px 60px rgba(9,29,66,0.12)',
+      }}
+    >
+      <CardContent sx={{ p: { xs: 3, md: 4 } }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
           Lifestyle &amp; Mental Health
         </Typography>
@@ -69,6 +95,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               "Moderate-to-vigorous days"
             }
             InputProps={{ inputProps: { min: 0, max: 7 } }}
+            sx={fieldStyles}
           />
           <TextField
             fullWidth
@@ -80,6 +107,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
             error={Boolean(errors.sleep_hours_avg)}
             helperText={errors.sleep_hours_avg || "Past week average"}
             InputProps={{ inputProps: { min: 0, max: 14, step: 0.5 } }}
+            sx={fieldStyles}
           />
           <Autocomplete
             options={smokingOptions}
@@ -93,6 +121,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                 label="Smoking Status"
                 error={Boolean(errors.smoking_status)}
                 helperText={errors.smoking_status || "Current tobacco exposure"}
+                sx={fieldStyles}
               />
             )}
           />
@@ -108,6 +137,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                 label="Alcohol Frequency"
                 error={Boolean(errors.alcohol_frequency)}
                 helperText={errors.alcohol_frequency || "Typical cadence"}
+                sx={fieldStyles}
               />
             )}
           />
@@ -141,6 +171,17 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                     ? "warning"
                     : "success"
                 }
+                sx={{
+                  flexGrow: 1,
+                  "& .MuiSlider-track": { border: "none" },
+                  "& .MuiSlider-rail": { opacity: 0.3 },
+                  "& .MuiSlider-thumb": {
+                    boxShadow: "0 10px 20px rgba(9,29,66,0.15)",
+                    border: "3px solid #fff",
+                  },
+                  "& .MuiSlider-markLabel:first-of-type": { ml: 4 },
+                  "& .MuiSlider-markLabel:last-of-type": { mr: 4 },
+                }}
               />
               <SentimentVeryDissatisfiedIcon />
             </Stack>
@@ -163,6 +204,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               "Validated screening (PHQ-9, DASS-21, etc.)"
             }
             InputProps={{ inputProps: { min: 0, max: 27 } }}
+            sx={fieldStyles}
           />
         </Box>
       </CardContent>
