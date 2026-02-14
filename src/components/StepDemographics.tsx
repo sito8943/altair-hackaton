@@ -56,7 +56,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
           Capture the core demographics so we can contextualize physiologic and
           behavioral inputs.
         </Typography>
-        <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap>
+        <Stack direction="row" spacing={4} flexWrap="wrap" useFlexGap>
           <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
             <TextField
               fullWidth

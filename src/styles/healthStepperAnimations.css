@@ -1,0 +1,115 @@
+:root {
+  --hsf-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hsf-step-panel {
+  animation: hsfFadeSlideIn 520ms var(--hsf-ease) both;
+  will-change: transform, opacity;
+}
+
+.hsf-stepper .hsf-step {
+  transition: opacity 360ms var(--hsf-ease), transform 360ms var(--hsf-ease);
+}
+
+.hsf-stepper .hsf-step:hover {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.hsf-icon-button {
+  transition: transform 320ms var(--hsf-ease),
+    background-color 260ms var(--hsf-ease),
+    color 260ms var(--hsf-ease);
+  border-radius: 999px;
+}
+
+.hsf-icon-button:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.04);
+  background-color: rgba(15, 76, 129, 0.08);
+}
+
+.hsf-icon-button--primary {
+  border: 1px solid rgba(15, 76, 129, 0.1);
+  background-color: #ffffff;
+}
+
+.hsf-icon-button--primary:not(:disabled):hover {
+  background-color: #f5f9ff;
+}
+
+.hsf-alert {
+  animation: hsfFadeIn 360ms var(--hsf-ease) both;
+}
+
+.hsf-form .MuiFormControl-root,
+.hsf-form .MuiAutocomplete-root,
+.hsf-form .MuiSlider-root {
+  animation: hsfFieldFade 420ms var(--hsf-ease) both;
+  animation-delay: 90ms;
+  transform-origin: top center;
+  transition: transform 280ms var(--hsf-ease),
+    box-shadow 280ms var(--hsf-ease);
+}
+
+.hsf-form .MuiOutlinedInput-root,
+.hsf-form .MuiAutocomplete-root .MuiOutlinedInput-root,
+.hsf-form .MuiSlider-root .MuiSlider-track,
+.hsf-form .MuiSlider-root .MuiSlider-thumb {
+  transition: transform 260ms var(--hsf-ease),
+    box-shadow 260ms var(--hsf-ease),
+    border-color 260ms var(--hsf-ease);
+}
+
+.hsf-form .MuiOutlinedInput-root.Mui-focused,
+.hsf-form .MuiAutocomplete-root .MuiOutlinedInput-root.Mui-focused,
+.hsf-form .MuiSlider-root:focus-within {
+  transform: scale(1.015);
+}
+
+.hsf-form .MuiSlider-root .MuiSlider-thumb:focus-visible {
+  transform: scale(1.08);
+}
+
+@keyframes hsfFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes hsfFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hsfFieldFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hsf-step-panel,
+  .hsf-stepper .hsf-step,
+  .hsf-icon-button,
+  .hsf-alert,
+  .hsf-form .MuiFormControl-root,
+  .hsf-form .MuiAutocomplete-root,
+  .hsf-form .MuiSlider-root {
+    animation: none !important;
+    transition: none !important;
+  }
+}

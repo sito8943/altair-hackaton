@@ -52,7 +52,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
         <Box
           sx={{
             display: "grid",
-            gap: 2,
+            gap: 4,
             gridTemplateColumns: {
               xs: "1fr",
               sm: "repeat(2, minmax(0, 1fr))",

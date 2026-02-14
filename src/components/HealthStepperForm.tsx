@@ -22,6 +22,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SendIcon from "@mui/icons-material/Send";
+import "../styles/healthStepperAnimations.css";
 import type {
   HealthFormErrors,
   HealthFormField,
@@ -250,14 +251,19 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
 
   return (
     <Box component="section" aria-label="Health data intake form">
-      <Box component="form" onSubmit={handleSubmit} noValidate>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        className="hsf-form"
+      >
         {formMessage && (
-          <Alert severity="warning" sx={{ mt: 2 }}>
+          <Alert severity="warning" sx={{ mt: 2 }} className="hsf-alert">
             {formMessage}
           </Alert>
         )}
         <Fade key={activeStep} in timeout={500}>
-          <Box>
+          <Box className="hsf-step-panel">
             <CurrentStepComponent
               values={values}
               onChange={updateField}
@@ -274,6 +280,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
               justifyContent: "center",
               gap: 2,
             }}
+            className="hsf-stepper"
           >
             {steps.map((step, index) => (
               <Step
@@ -287,6 +294,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   },
                   "& .MuiStepIcon-root": {
                     transform: activeStep === index ? "scale(1.4)" : "scale(1)",
+                    transition: "transform 0.35s ease",
                   },
                   "&:hover .MuiStepIcon-root": {
                     transform: "scale(1.4)",
@@ -332,6 +340,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                     opacity: 1,
                   },
                 }}
+                className="hsf-step"
               >
                 <StepLabel StepIconComponent={StepDot}>
                   <Stack
@@ -368,6 +377,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                 size="large"
                 disabled={activeStep === 0 || loading}
                 onClick={handleBack}
+                className="hsf-icon-button"
               >
                 <ArrowBackIcon />
               </IconButton>
@@ -380,6 +390,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                 size="large"
                 disabled={loading}
                 onClick={resetForm}
+                className="hsf-icon-button"
               >
                 <RestartAltIcon />
               </IconButton>
@@ -410,6 +421,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   boxShadow: "none",
                   "&:hover": { bgcolor: "white" },
                 }}
+                className="hsf-icon-button hsf-icon-button--primary"
               >
                 {activeStep === steps.length - 1 ? (
                   <SendIcon />
