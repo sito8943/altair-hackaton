@@ -13,6 +13,7 @@ import HealthStepperForm from "./components/HealthStepperForm";
 import mockPredictionResult from "./data/mockPredictionResult";
 import { predictRisk } from "./services/api";
 import { LATEST_PREDICTION_RESULT_KEY } from "./constants/storageKeys";
+import { normalizePredictionResult } from "./utils/normalizeResult";
 import type { PredictionPayload, PredictionResult } from "./types";
 import theme, { brandColors, brandShadows } from "./theme";
 
@@ -20,7 +21,10 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const useMockApi = import.meta.env.DEV && import.meta.env.VITE_USE_REAL_API !== "true";
+  const dataSource = import.meta.env.VITE_DATA_SOURCE?.toLowerCase();
+  const useMockApi =
+    dataSource === "mock" ||
+    (import.meta.env.DEV && import.meta.env.VITE_USE_REAL_API !== "true");
 
   const persistAndNavigate = (prediction: PredictionResult) => {
     if (typeof window !== "undefined") {
@@ -42,7 +46,7 @@ const App = () => {
         return;
       }
       const { data } = await predictRisk(payload);
-      persistAndNavigate(data);
+      persistAndNavigate(normalizePredictionResult(data));
     } catch (err) {
       const fallbackMessage =
         "Unable to reach the prediction API. Verify the backend service and try again.";
