@@ -3,11 +3,43 @@ export interface PredictionFactor {
   impact: number
 }
 
-export interface PredictionResult {
-  risk_score: number
+export interface RiskFactorDetail {
+  factor_name: string
+  user_value: number | string
+  impact: number
+  direction: string
+}
+
+export interface DiseaseRiskExplanation {
+  top_risk_factors?: RiskFactorDetail[]
+  top_protective_factors?: RiskFactorDetail[]
+}
+
+export interface DiseaseRisk {
+  disease: string
+  risk_probability: number
   risk_level: string
-  top_factors: PredictionFactor[]
-  trend_signal: string
+  threshold_used: number
+  is_high_risk: boolean
+  trend_signal?: string
+  explanation?: DiseaseRiskExplanation
+}
+
+export interface PredictionResult {
+  overall: {
+    risk_score: number
+    risk_level: string
+    highest_risk_disease: string
+    data_quality_score: number
+  }
+  disease_risks: DiseaseRisk[]
+  data_quality: {
+    missing_fields: string[]
+    inconsistent_fields: string[]
+    confidence_note: string
+  }
+  recommendations: string[]
+  disclaimer: string
 }
 
 export interface HealthFormValues {

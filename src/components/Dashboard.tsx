@@ -5,7 +5,7 @@ import Grid from '@mui/material/GridLegacy'
 import type { ChipProps } from '@mui/material/Chip'
 import FactorCard from './FactorCard'
 import RiskGauge from './RiskGauge'
-import type { PredictionResult } from '../types'
+import type { PredictionFactor, PredictionResult } from '../types'
 
 const riskChipColor = (level?: string | null): ChipProps['color'] => {
   if (!level) return 'default'
@@ -19,12 +19,24 @@ interface DashboardProps {
   result: PredictionResult | null
 }
 
+const formatFactorName = (name: string) =>
+  name
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+
 const Dashboard = ({ result }: DashboardProps) => {
   if (!result) return null
-  const { risk_score, risk_level, top_factors = [], trend_signal } = result
-  const percentScore = Math.round((risk_score ?? 0) * 100)
-  const trendIncreasing = (trend_signal || '').toLowerCase().includes('increase')
+  const overall = result.overall
+  const primaryDisease = result.disease_risks?.[0]
+  const percentScore = Math.round((overall?.risk_score ?? 0) * 100)
+  const trendText = primaryDisease?.trend_signal || ''
+  const trendIncreasing = trendText.toLowerCase().includes('increase')
   const TrendIcon = trendIncreasing ? TrendingUpIcon : TrendingDownIcon
+  const topFactors: PredictionFactor[] =
+    primaryDisease?.explanation?.top_risk_factors?.map((factor) => ({
+      name: formatFactorName(factor.factor_name),
+      impact: factor.impact,
+    })) ?? []
 
   return (
     <Box component="section" mt={6} mb={4}>
@@ -45,10 +57,10 @@ const Dashboard = ({ result }: DashboardProps) => {
                 <Typography variant="h2" fontWeight={700}>
                   {percentScore}%
                 </Typography>
-                <Chip label={risk_level || 'Unknown'} color={riskChipColor(risk_level)} size="medium" />
+                <Chip label={overall?.risk_level || 'Unknown'} color={riskChipColor(overall?.risk_level)} size="medium" />
               </Stack>
               <Typography variant="body2" color="text.secondary" mt={2}>
-                Represents likelihood of escalation within the next monitoring window.
+                Highest risk disease: {overall?.highest_risk_disease || 'N/A'}
               </Typography>
             </CardContent>
           </Card>
@@ -59,7 +71,7 @@ const Dashboard = ({ result }: DashboardProps) => {
               <Typography variant="subtitle2" color="text.secondary">
                 Normalized Gauge (0-1)
               </Typography>
-              <RiskGauge score={risk_score} />
+              <RiskGauge score={overall?.risk_score} />
             </CardContent>
           </Card>
         </Grid>
@@ -70,12 +82,12 @@ const Dashboard = ({ result }: DashboardProps) => {
                 Top Contributing Factors
               </Typography>
               <Grid container spacing={2}>
-                {top_factors.map((factor) => (
+                {topFactors.map((factor) => (
                   <Grid item xs={12} sm={6} key={`${factor.name}-${factor.impact}`}>
                     <FactorCard factor={factor} />
                   </Grid>
                 ))}
-                {!top_factors.length && (
+                {!topFactors.length && (
                   <Grid item xs={12}>
                     <Typography variant="body2" color="text.secondary">
                       No contributing factors returned by the service.
@@ -112,7 +124,7 @@ const Dashboard = ({ result }: DashboardProps) => {
               </Stack>
               <Divider sx={{ my: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                {trend_signal || 'No longitudinal trend available.'}
+                {trendText || 'No longitudinal trend available.'}
               </Typography>
             </CardContent>
           </Card>

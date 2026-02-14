@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -17,10 +17,6 @@ import {
   Grow,
   IconButton,
   LinearProgress,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Stack,
   ThemeProvider,
   Typography,
@@ -41,29 +37,15 @@ const panelCardSx: SxProps<Theme> = {
   boxShadow: "none",
 };
 
-const recommendedActions = [
-  "Schedule a telehealth consult focusing on hypertension control strategies.",
-  "Trigger sleep hygiene coaching workflow via care navigator.",
-  "Share mindfulness resources to reduce the stress marker from 8 → 5.",
-];
+const formatFactorName = (name: string) =>
+  name
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 
-const vitalSignals = [
-  {
-    label: "Blood pressure trend",
-    value: "138 / 92 mmHg",
-    helper: "+6 mmHg avg surge vs baseline",
-  },
-  {
-    label: "Activity adherence",
-    value: "42%",
-    helper: "3 of last 7 days met target",
-  },
-  {
-    label: "Sleep efficiency",
-    value: "72%",
-    helper: "Average 5.8 hrs vs 7.5 hr goal",
-  },
-];
+const formatDiseaseName = (name?: string) => {
+  if (!name) return "N/A";
+  return name.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+};
 
 const ResultView = () => {
   const navigate = useNavigate();
@@ -85,10 +67,39 @@ const ResultView = () => {
 
   const result = routedResult ?? storedResult ?? mockPredictionResult;
 
-  const percentScore = Math.round((result.risk_score ?? 0) * 100);
-  const trendIncreasing = (result.trend_signal || "")
-    .toLowerCase()
-    .includes("increase");
+  const overall = result.overall;
+  const primaryDisease = result.disease_risks?.[0];
+  const percentScore = Math.round((overall?.risk_score ?? 0) * 100);
+  const trendSignal = primaryDisease?.trend_signal || "";
+  const trendIncreasing = trendSignal.toLowerCase().includes("increase");
+
+  const recommendedActions = useMemo(() => {
+    if (result.recommendations?.length) return result.recommendations;
+    return [
+      "Increase weekly physical activity",
+      "Improve sleep hygiene routine",
+      "Monitor blood pressure daily",
+    ];
+  }, [result.recommendations]);
+
+  const dataQuality = result.data_quality;
+  const diseaseCards = result.disease_risks?.slice(0, 5) ?? [];
+  const riskFactors = primaryDisease?.explanation?.top_risk_factors ?? [];
+  const protectiveFactors = primaryDisease?.explanation?.top_protective_factors ?? [];
+
+  const explanationText = useMemo(() => {
+    const drivers = riskFactors.map((factor) => formatFactorName(factor.factor_name));
+    if (!drivers.length) return "No drivers reported for this disease.";
+    if (drivers.length === 1) {
+      return `Your risk is primarily rising due to ${drivers[0]}.`;
+    }
+    if (drivers.length === 2) {
+      return `Your risk is primarily rising due to ${drivers[0]} and ${drivers[1]}.`;
+    }
+    return `Your risk is primarily rising due to ${drivers
+      .slice(0, 2)
+      .join(", ")} and ${drivers[2]}.`;
+  }, [riskFactors]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -146,7 +157,7 @@ const ResultView = () => {
                     Patient-focused response
                   </Typography>
                   <Typography variant="h5" fontWeight={700}>
-                    Command Center / Resultado
+                    Command Center / Results
                   </Typography>
                 </Box>
               </Stack>
@@ -156,7 +167,7 @@ const ResultView = () => {
                   startIcon={<ArrowBackIcon />}
                   onClick={() => navigate("/intake/demographics")}
                 >
-                  Regresar a intake
+                  Back to intake
                 </Button>
                 <Button
                   variant="contained"
@@ -167,12 +178,13 @@ const ResultView = () => {
                 </Button>
               </Stack>
             </Stack>
-            <Box>
-              <Card elevation={0} sx={panelCardSx}>
-                <CardContent>
-                  <Stack spacing={2}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={7}>
+                <Card elevation={0} sx={panelCardSx}>
+                  <CardContent>
+                    <Stack spacing={2}>
                       <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                        Resumen predictivo
+                        Predictive summary
                       </Typography>
                       <Stack
                         direction={{ xs: "column", lg: "row" }}
@@ -184,21 +196,21 @@ const ResultView = () => {
                         </Typography>
                         <Stack direction="row" spacing={2} alignItems="center">
                           <Chip
-                            label={result.risk_level || "Sin dato"}
+                            label={overall?.risk_level || "Unknown"}
                             color={trendIncreasing ? "error" : "success"}
                             sx={{ fontWeight: 600 }}
                           />
                           <Stack direction="row" spacing={1} alignItems="center">
                             <TrendingUpIcon color={trendIncreasing ? "error" : "success"} />
                             <Typography variant="body2" color="text.secondary">
-                              {result.trend_signal || "Sin señal longitudinal"}
+                              {trendSignal || "No longitudinal trend"}
                             </Typography>
                           </Stack>
                         </Stack>
                       </Stack>
                       <Box>
                         <Typography variant="caption" color="text.secondary">
-                          Normalizado 0-1
+                          Normalized 0-1
                         </Typography>
                         <LinearProgress
                           variant="determinate"
@@ -207,164 +219,274 @@ const ResultView = () => {
                           sx={{ mt: 1, height: 10, borderRadius: 999 }}
                         />
                       </Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Interpretación mockeada ligada a la respuesta del modelo para los próximos 30 días.
-                      </Typography>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Box>
-
-            <Box
-              sx={{
-                display: "grid",
-                gap: { xs: 2, md: 3 },
-                gridTemplateColumns: {
-                  xs: "1fr",
-                  md: "repeat(2, minmax(0, 1fr))",
-                },
-                alignItems: "stretch",
-              }}
-            >
-              <Box
-                sx={{
-                  display: "grid",
-                  gap: { xs: 2, md: 3 },
-                  gridTemplateRows: {
-                    xs: "auto",
-                    md: "repeat(2, minmax(0, 1fr))",
-                  },
-                }}
-              >
+                      <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
+                            Highest risk disease
+                          </Typography>
+                          <Typography variant="h6" fontWeight={600}>
+                            {formatDiseaseName(overall?.highest_risk_disease)}
+                          </Typography>
+                        </Box>
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">
+                            Data quality confidence
+                          </Typography>
+                          <Typography variant="h6" fontWeight={600}>
+                            {Math.round((overall?.data_quality_score ?? 0) * 100)}%
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={5}>
                 <Card elevation={0} sx={panelCardSx}>
                   <CardContent>
                     <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Gauge de riesgo
+                      Risk gauge
                     </Typography>
                     <Box sx={{ height: 280, mt: 1 }}>
-                      <RiskGauge score={result.risk_score} />
+                      <RiskGauge score={overall?.risk_score} />
                     </Box>
                     <Typography variant="body2" color="text.secondary" mt={1}>
-                      Score normalizado para dimensionar la probabilidad.
+                      Normalized score to size the probability.
                     </Typography>
                   </CardContent>
                 </Card>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Factores principales
-                    </Typography>
-                    <Stack spacing={2} mt={2}>
-                      {(result.top_factors || []).slice(0, 4).map((factor) => (
-                        <Box key={`${factor.name}-${factor.impact}`}>
-                          <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Typography fontWeight={600}>{factor.name}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {Math.round((factor.impact ?? 0) * 100)}%
-                            </Typography>
-                          </Stack>
-                          <LinearProgress
-                            variant="determinate"
-                            value={Math.round((factor.impact ?? 0) * 100)}
-                            color={
-                              factor.impact > 0.3
-                                ? "error"
-                                : factor.impact > 0.15
-                                ? "warning"
-                                : "success"
-                            }
-                            sx={{ mt: 1, height: 8, borderRadius: 999 }}
-                          />
-                        </Box>
-                      ))}
-                      {!result.top_factors?.length && (
-                        <Typography variant="body2" color="text.secondary">
-                          El servicio no retornó factores destacados.
-                        </Typography>
-                      )}
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Box>
+              </Grid>
+            </Grid>
 
-              <Box
-                sx={{
-                  display: "grid",
-                  gap: { xs: 2, md: 3 },
-                  gridTemplateRows: {
-                    xs: "auto",
-                    md: "repeat(2, minmax(0, 1fr))",
-                  },
-                }}
-              >
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Acciones sugeridas
-                    </Typography>
-                    <Stack spacing={2.5} mt={1}>
-                      {recommendedActions.map((action) => (
-                        <Box
-                          key={action}
-                          sx={{
-                            display: "flex",
-                            gap: 2,
-                            alignItems: "flex-start",
-                            p: 1.5,
-                            borderRadius: 2,
-                            backgroundColor: "rgba(15,76,129,0.04)",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: "50%",
-                              backgroundColor: "rgba(102,187,106,0.15)",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "success.main",
-                              flexShrink: 0,
-                            }}
-                          >
-                            <CheckCircleIcon fontSize="small" />
-                          </Box>
-                          <Box>
-                            <Typography fontWeight={600}>{action}</Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Prioridad inmediata
+            <Box>
+              <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                Disease risk cards
+              </Typography>
+              <Grid container spacing={2} mt={1}>
+                {diseaseCards.map((disease) => {
+                  const probabilityPercent = Math.round(
+                    (disease.risk_probability ?? 0) * 100
+                  );
+                  const diseaseTrend = disease.trend_signal || "stable";
+                  const isIncreasing = diseaseTrend.toLowerCase().includes("increase");
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={disease.disease}>
+                      <Card elevation={0} sx={panelCardSx}>
+                        <CardContent>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Typography variant="h6" fontWeight={600}>
+                              {formatDiseaseName(disease.disease)}
                             </Typography>
-                          </Box>
-                        </Box>
-                      ))}
-                    </Stack>
-                  </CardContent>
-                </Card>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Señales vitales
-                    </Typography>
-                    <Stack divider={<Divider flexItem />} spacing={2.5} mt={2}>
-                      {vitalSignals.map((signal) => (
-                        <Box key={signal.label}>
-                          <Typography variant="caption" color="text.secondary">
-                            {signal.label}
-                          </Typography>
-                          <Typography variant="h5" fontWeight={700}>
-                            {signal.value}
+                            <Chip
+                              size="small"
+                              label={disease.is_high_risk ? "High risk" : "Monitor"}
+                              color={disease.is_high_risk ? "error" : "default"}
+                            />
+                          </Stack>
+                          <Typography variant="h4" fontWeight={700}>
+                            {probabilityPercent}%
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            {signal.helper}
+                            Level: {disease.risk_level || "N/A"}
                           </Typography>
-                        </Box>
-                      ))}
+                          <Typography variant="caption" color="text.secondary">
+                            Threshold {disease.threshold_used}
+                          </Typography>
+                          <Divider sx={{ my: 2 }} />
+                          <Stack direction="row" spacing={1} alignItems="center">
+                            <TrendingUpIcon
+                              fontSize="small"
+                              color={isIncreasing ? "error" : "success"}
+                            />
+                            <Typography variant="body2" color="text.secondary">
+                              {diseaseTrend || "stable"}
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+                {!diseaseCards.length && (
+                  <Grid item xs={12}>
+                    <Card elevation={0} sx={panelCardSx}>
+                      <CardContent>
+                        <Typography color="text.secondary">
+                          No disease-specific predictions available.
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )}
+              </Grid>
+            </Box>
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={7}>
+                <Card elevation={0} sx={panelCardSx}>
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                        Disease explainability
+                      </Typography>
+                      <Typography variant="subtitle1" fontWeight={600}>
+                        {formatDiseaseName(primaryDisease?.disease)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {explanationText}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                          <Typography variant="caption" color="text.secondary">
+                            Top risk factors
+                          </Typography>
+                          <Stack spacing={1.5} mt={1}>
+                            {riskFactors.length ? (
+                              riskFactors.map((factor) => (
+                                <Box key={`risk-${factor.factor_name}`}>
+                                  <Typography fontWeight={600}>
+                                    {formatFactorName(factor.factor_name)}
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Value: {factor.user_value} · Impact {Math.round(
+                                      (factor.impact ?? 0) * 100
+                                    )}%
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Direction: {factor.direction}
+                                  </Typography>
+                                </Box>
+                              ))
+                            ) : (
+                              <Typography variant="body2" color="text.secondary">
+                                No risk factors reported.
+                              </Typography>
+                            )}
+                          </Stack>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography variant="caption" color="text.secondary">
+                            Protective factors
+                          </Typography>
+                          <Stack spacing={1.5} mt={1}>
+                            {protectiveFactors.length ? (
+                              protectiveFactors.map((factor) => (
+                                <Box key={`protect-${factor.factor_name}`}>
+                                  <Typography fontWeight={600}>
+                                    {formatFactorName(factor.factor_name)}
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Value: {factor.user_value} · Impact {Math.round(
+                                      (factor.impact ?? 0) * 100
+                                    )}%
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    Direction: {factor.direction}
+                                  </Typography>
+                                </Box>
+                              ))
+                            ) : (
+                              <Typography variant="body2" color="text.secondary">
+                                No protective levers reported.
+                              </Typography>
+                            )}
+                          </Stack>
+                        </Grid>
+                      </Grid>
                     </Stack>
                   </CardContent>
                 </Card>
-              </Box>
-            </Box>
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <Card elevation={0} sx={panelCardSx}>
+                  <CardContent>
+                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                      Data quality & alerts
+                    </Typography>
+                    <Stack spacing={2} mt={2}>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Missing fields
+                        </Typography>
+                        <Typography variant="body1" fontWeight={600}>
+                          {dataQuality?.missing_fields?.length
+                            ? dataQuality.missing_fields.join(", ")
+                            : "None"}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Inconsistent fields
+                        </Typography>
+                        <Typography variant="body1" fontWeight={600}>
+                          {dataQuality?.inconsistent_fields?.length
+                            ? dataQuality.inconsistent_fields.join(", ")
+                            : "None"}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Confidence note
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {dataQuality?.confidence_note || "No note provided."}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+
+            <Card elevation={0} sx={panelCardSx}>
+              <CardContent>
+                <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                  Actionable recommendations
+                </Typography>
+                <Stack spacing={2.5} mt={2}>
+                  {recommendedActions.map((action) => (
+                    <Box
+                      key={action}
+                      sx={{
+                        display: "flex",
+                        gap: 2,
+                        alignItems: "flex-start",
+                        p: 1.5,
+                        borderRadius: 2,
+                        backgroundColor: "rgba(15,76,129,0.04)",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(102,187,106,0.15)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "success.main",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <CheckCircleIcon fontSize="small" />
+                      </Box>
+                      <Box>
+                        <Typography fontWeight={600}>{action}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          Follow up with care team for scheduling.
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+                {result.disclaimer && (
+                  <Typography variant="caption" color="text.secondary" mt={3} display="block">
+                    {result.disclaimer}
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
           </Stack>
         </Container>
       </Box>
