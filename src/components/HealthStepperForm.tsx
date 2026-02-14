@@ -305,18 +305,19 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             ))}
           </Stepper>
         </Box>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          className="hsf-form"
-          sx={{ flex: 1, minWidth: 0, position: "relative" }}
-        >
-          {formMessage && (
-            <Alert severity="warning" sx={{ mb: 2 }} className="hsf-alert">
-              {formMessage}
-            </Alert>
-          )}
+        <Box className="hsf-form-container" sx={{ flex: 1, minWidth: 0 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            className="hsf-form"
+            sx={{ position: "relative" }}
+          >
+            {formMessage && (
+              <Alert severity="warning" sx={{ mb: 2 }} className="hsf-alert">
+                {formMessage}
+              </Alert>
+            )}
           <Box
             sx={{
               display: "flex",
@@ -324,8 +325,8 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
               mb: 2,
               position: "absolute",
               zIndex: 24,
-              right: "9px",
-              top: "26px",
+              right: "0",
+              top: "-7px",
             }}
           >
             <Tooltip title="Reset" placement="top">
@@ -342,10 +343,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
               </span>
             </Tooltip>
           </Box>
-          <Box
-            className="form-shell"
-            sx={{ border: "1px solid rgba(15, 30, 50, 0.06)", borderRadius: 1 }}
-          >
+          <Box className="hsf-form-panel">
             <SwitchTransition mode="out-in">
               <CSSTransition
                 key={activeStep}
@@ -516,6 +514,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
               </span>
             </Tooltip>
           </Stack>
+          </Box>
         </Box>
       </Stack>
     </Box>

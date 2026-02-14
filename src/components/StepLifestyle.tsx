@@ -36,7 +36,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
 
   return (
     <Card elevation={0} sx={glassPanelCardSx}>
-      <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+      <CardContent sx={{ p: 0 }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
           Lifestyle &amp; Mental Health
         </Typography>

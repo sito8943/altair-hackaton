@@ -44,11 +44,8 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
   };
 
   return (
-    <Card
-      elevation={0}
-      sx={glassPanelCardSx}
-    >
-      <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+    <Card elevation={0} sx={glassPanelCardSx}>
+      <CardContent sx={{ p: 0 }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
           Demographic Profile
         </Typography>
