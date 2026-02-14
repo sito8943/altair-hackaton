@@ -46,17 +46,13 @@ const App = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          bgcolor: "background.default",
+          background:
+            "linear-gradient(180deg,#fdfefe 0%,#eaf4fb 50%,#e2f0f8 100%)",
           py: { xs: 4, md: 6 },
         }}
       >
         <Container maxWidth="lg">
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            sx={{ mb: 3 }}
-          >
+          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
             <Box
               sx={{
                 width: 48,

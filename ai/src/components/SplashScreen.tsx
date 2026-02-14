@@ -40,7 +40,7 @@ const SplashScreen = () => {
         display: "flex",
         alignItems: "center",
         background:
-          "radial-gradient(circle at 70% 20%, #f0f7ff 0%, #e9f1f9 100%)",
+          "linear-gradient(180deg, #fffdf8 0%, #f8f5ff 40%, #f1fbff 100%)",
         color: "#1a3353",
         position: "relative",
         overflow: "hidden",
