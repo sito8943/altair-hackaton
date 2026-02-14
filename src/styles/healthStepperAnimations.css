@@ -14,8 +14,7 @@
 .hsf-step-panel-transition-enter-active {
   opacity: 1;
   transform: translateY(0) scale(1);
-  transition: opacity 520ms var(--hsf-ease),
-    transform 520ms var(--hsf-ease);
+  transition: opacity 520ms var(--hsf-ease), transform 520ms var(--hsf-ease);
 }
 
 .hsf-step-panel-transition-exit {
@@ -26,8 +25,7 @@
 .hsf-step-panel-transition-exit-active {
   opacity: 0;
   transform: translateY(-12px) scale(0.97);
-  transition: opacity 420ms var(--hsf-ease),
-    transform 420ms var(--hsf-ease);
+  transition: opacity 420ms var(--hsf-ease), transform 420ms var(--hsf-ease);
 }
 
 .hsf-stepper .hsf-step {
@@ -41,8 +39,7 @@
 
 .hsf-icon-button {
   transition: transform 320ms var(--hsf-ease),
-    background-color 260ms var(--hsf-ease),
-    color 260ms var(--hsf-ease);
+    background-color 260ms var(--hsf-ease), color 260ms var(--hsf-ease);
   border-radius: 999px;
 }
 
@@ -64,7 +61,11 @@
   flex: 0 0 260px;
   padding: 28px 28px 40px;
   border-radius: 30px;
-  background: linear-gradient(180deg, rgba(255, 253, 248, 0.92) 0%, rgba(241, 251, 255, 0.95) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 253, 248, 0.92) 0%,
+    rgba(241, 251, 255, 0.95) 100%
+  );
   border: 1px solid rgba(15, 30, 50, 0.06);
   box-shadow: none;
   min-height: 100%;
@@ -73,12 +74,14 @@
 
 .form-shell {
   width: 100%;
-  max-width: 760px;
   margin: 0 auto;
   border: 1px solid rgba(15, 30, 50, 0.06);
   border-radius: 24px;
-  padding: clamp(16px, 3vw, 36px);
-  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98) 0%, rgba(241, 251, 255, 0.98) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 253, 248, 0.98) 0%,
+    rgba(241, 251, 255, 0.98) 100%
+  );
   box-sizing: border-box;
 }
 
@@ -117,7 +120,11 @@
   top: 40px;
   height: calc(100% - 32px);
   width: 2px;
-  background: linear-gradient(180deg, rgba(15, 76, 129, 0.15) 0%, rgba(15, 76, 129, 0.05) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 76, 129, 0.15) 0%,
+    rgba(15, 76, 129, 0.05) 100%
+  );
 }
 
 .hsf-stepper--vertical .MuiStep-root:last-of-type::after {
@@ -155,16 +162,14 @@
   animation: hsfFieldFade 420ms var(--hsf-ease) both;
   animation-delay: 90ms;
   transform-origin: top center;
-  transition: transform 280ms var(--hsf-ease),
-    box-shadow 280ms var(--hsf-ease);
+  transition: transform 280ms var(--hsf-ease), box-shadow 280ms var(--hsf-ease);
 }
 
 .hsf-form .MuiOutlinedInput-root,
 .hsf-form .MuiAutocomplete-root .MuiOutlinedInput-root,
 .hsf-form .MuiSlider-root .MuiSlider-track,
 .hsf-form .MuiSlider-root .MuiSlider-thumb {
-  transition: transform 260ms var(--hsf-ease),
-    box-shadow 260ms var(--hsf-ease),
+  transition: transform 260ms var(--hsf-ease), box-shadow 260ms var(--hsf-ease),
     border-color 260ms var(--hsf-ease);
 }
 
