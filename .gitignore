@@ -12,7 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
-hosting/*
+.firebase/altair-hackathon/hosting/*
 
 # Editor directories and files
 .vscode/*
