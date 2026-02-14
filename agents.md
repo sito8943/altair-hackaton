@@ -59,7 +59,7 @@ This implementation goes beyond the baseline Material Design 3 specifications by
 
 ### Colors (Light Mode)
 
-Material You uses a sophisticated tonal palette derived from a seed color. For this implementation, use a **Purple/Violet seed** (#6750A4).
+Material You uses a sophisticated tonal palette derived from a seed color. For this implementation, use a **Blue seed** (#0f4c81).
 
 **Core Palette Structure**:
 - **Background (Surface)**: `#FFFBFE` - Slightly warm off-white, not pure white
