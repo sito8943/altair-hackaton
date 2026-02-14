@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ComponentType, FormEvent } from "react";
 import {
   Alert,
@@ -9,6 +9,7 @@ import {
   StepLabel,
   Stepper,
 } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 import StepDemographics from "./StepDemographics";
 import StepVitals from "./StepVitals";
 import StepLifestyle from "./StepLifestyle";
@@ -51,6 +52,28 @@ const initialValues: HealthFormValues = {
   depressive_symptoms_score: "",
 };
 
+const FORM_STORAGE_KEY = "health-risk-form-values";
+
+const loadStoredValues = (): HealthFormValues => {
+  if (typeof window === "undefined") return initialValues;
+  try {
+    const raw = window.localStorage.getItem(FORM_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<HealthFormValues>;
+      return { ...initialValues, ...parsed };
+    }
+  } catch (error) {
+    console.warn("Unable to parse stored form values", error);
+  }
+  return initialValues;
+};
+
+const routeMap = [
+  "/intake/demographics",
+  "/intake/vitals",
+  "/intake/lifestyle",
+];
+
 const steps: StepDefinition[] = [
   {
     label: "Demographics",
@@ -90,10 +113,24 @@ const steps: StepDefinition[] = [
 ];
 
 const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [values, setValues] = useState<HealthFormValues>(initialValues);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const derivedStep = routeMap.indexOf(location.pathname);
+  const activeStep = derivedStep === -1 ? 0 : derivedStep;
+  const [values, setValues] = useState<HealthFormValues>(() => loadStoredValues());
   const [errors, setErrors] = useState<HealthFormErrors>({});
   const [formMessage, setFormMessage] = useState("");
+
+  useEffect(() => {
+    if (derivedStep === -1) {
+      navigate(routeMap[0], { replace: true });
+    }
+  }, [derivedStep, navigate]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(values));
+  }, [values]);
 
   const CurrentStepComponent = useMemo<ComponentType<StepComponentProps>>(
     () => steps[activeStep].component,
@@ -134,19 +171,25 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
 
   const handleNext = () => {
     if (!canAdvance()) return;
-    setActiveStep((prev) => prev + 1);
+    if (activeStep < steps.length - 1) {
+      navigate(routeMap[activeStep + 1]);
+    }
   };
 
   const handleBack = () => {
     setFormMessage("");
-    setActiveStep((prev) => Math.max(prev - 1, 0));
+    if (activeStep === 0) return;
+    navigate(routeMap[activeStep - 1]);
   };
 
   const resetForm = () => {
     setValues(initialValues);
     setErrors({});
     setFormMessage("");
-    setActiveStep(0);
+    navigate(routeMap[0]);
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(FORM_STORAGE_KEY);
+    }
   };
 
   const formatPayload = (): PredictionPayload => ({

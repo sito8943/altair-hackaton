@@ -57,7 +57,6 @@ const App = () => {
   const [result, setResult] = useState<PredictionResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
   const handleSubmit = async (payload: PredictionPayload) => {
     setLoading(true)
     setError('')
