@@ -3,6 +3,12 @@ import type { ComponentType, FormEvent } from "react";
 import {
   Alert,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Stack,
   Step,
@@ -157,6 +163,7 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
   );
   const [errors, setErrors] = useState<HealthFormErrors>({});
   const [formMessage, setFormMessage] = useState("");
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   useEffect(() => {
     if (derivedStep === -1) {
@@ -223,7 +230,12 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
     navigate(routeMap[activeStep - 1]);
   };
 
-  const resetForm = () => {
+  const handleResetClick = () => {
+    setResetDialogOpen(true);
+  };
+
+  const handleResetConfirm = () => {
+    setResetDialogOpen(false);
     setValues(initialValues);
     setErrors({});
     setFormMessage("");
@@ -231,6 +243,10 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(FORM_STORAGE_KEY);
     }
+  };
+
+  const handleResetCancel = () => {
+    setResetDialogOpen(false);
   };
 
   const formatPayload = (): PredictionPayload => ({
@@ -331,7 +347,7 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
                       color="inherit"
                       size="large"
                       disabled={loading}
-                      onClick={resetForm}
+                      onClick={handleResetClick}
                       className="hsf-icon-button"
                     >
                       <RestartAltIcon />
@@ -512,7 +528,48 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
           </Box>
         </Box>
       </Stack>
-    </Box>
+      <Dialog
+        open={resetDialogOpen}
+        onClose={handleResetCancel}
+        aria-labelledby="reset-dialog-title"
+        aria-describedby="reset-dialog-description"
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          },
+        }}
+        slotProps={{
+          backdrop: {
+            style: { backdropFilter: "blur(5px)" },
+          },
+        }}
+      >
+        <DialogTitle id="reset-dialog-title" sx={{ fontWeight: 600 }}>
+          Reset Form?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="reset-dialog-description">
+            All entered data will be lost. Are you sure you want to continue?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={handleResetCancel} color="inherit" sx={{ fontWeight: 600 }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleResetConfirm}
+            color="error"
+            variant="contained"
+            sx={{ fontWeight: 600, boxShadow: "none" }}
+            autoFocus
+          >
+            Continue
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box >
   );
 };
 
