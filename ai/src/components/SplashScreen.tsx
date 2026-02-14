@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { brandColors, brandGradients, brandShadows } from "../theme";
 
 const SplashScreen = () => {
   const navigate = useNavigate();
@@ -53,8 +54,7 @@ const SplashScreen = () => {
           width: 600,
           height: 600,
           borderRadius: "50%",
-          background:
-            "linear-gradient(135deg, rgba(15, 76, 129, 0.05) 0%, rgba(0, 167, 255, 0.05) 100%)",
+          background: brandGradients.halo,
           filter: "blur(80px)",
         }}
       />
@@ -68,8 +68,8 @@ const SplashScreen = () => {
             background: "none",
             backgroundColor: "none",
             backdropFilter: "blur(20px)",
-            border: "1px solid rgba(255, 255, 255, 0.7)",
-            boxShadow: "0 20px 50px rgba(0,0,0,0.05)",
+            border: "none",
+            boxShadow: "none",
             opacity: mounted ? 1 : 0,
             transform: mounted ? "translateY(0)" : "translateY(50px)",
             transition: "all 700ms ease",
@@ -95,11 +95,11 @@ const SplashScreen = () => {
                     width: 48,
                     height: 48,
                     borderRadius: 3,
-                    bgcolor: "#0f4c81",
+                    bgcolor: brandColors.primary,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0 8px 16px rgba(15,76,129,0.2)",
+                    boxShadow: brandShadows.emblem,
                   }}
                 >
                   <Typography
@@ -112,7 +112,7 @@ const SplashScreen = () => {
                 <Typography
                   variant="subtitle1"
                   fontWeight={700}
-                  sx={{ letterSpacing: 0.5, color: "#0f4c81" }}
+                  sx={{ letterSpacing: 0.5, color: brandColors.primary }}
                 >
                   Health Risk Command Center
                 </Typography>
@@ -121,7 +121,11 @@ const SplashScreen = () => {
               <Stack spacing={2}>
                 <Typography
                   variant="overline"
-                  sx={{ letterSpacing: 3, color: "#00a7ff", fontWeight: 700 }}
+                  sx={{
+                    letterSpacing: 3,
+                    color: brandColors.accent,
+                    fontWeight: 700,
+                  }}
                 >
                   Predict & Prevent
                 </Typography>
@@ -137,7 +141,7 @@ const SplashScreen = () => {
                   Proactive intelligence you can trust,
                   <Box
                     component="span"
-                    sx={{ color: "#00a7ff", display: "block" }}
+                    sx={{ color: brandColors.accent, display: "block" }}
                   >
                     when you need it most.
                   </Box>
@@ -148,7 +152,7 @@ const SplashScreen = () => {
                 sx={{
                   width: "60px",
                   borderBottomWidth: 4,
-                  borderColor: "#00a7ff",
+                  borderColor: brandColors.accent,
                   borderRadius: 2,
                 }}
               />
@@ -178,9 +182,9 @@ const SplashScreen = () => {
                   fontSize: "1.1rem",
                   textTransform: "none",
                   fontWeight: 700,
-                  backgroundColor: "#0f4c81",
-                  boxShadow: "0 10px 20px rgba(15,76,129,0.3)",
-                  "&:hover": { backgroundColor: "#0a365c" },
+                  backgroundColor: brandColors.primary,
+                  boxShadow: brandShadows.cta,
+                  "&:hover": { backgroundColor: brandColors.primaryDark },
                   alignSelf: "flex-start",
                 }}
               >
@@ -196,10 +200,10 @@ const SplashScreen = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 animation: "float 6s ease-in-out infinite",
-                "@keyframes float": {
+                /* "@keyframes float": {
                   "0%, 100%": { transform: "translateY(0)" },
                   "50%": { transform: "translateY(-20px)" },
-                },
+                }, */
                 opacity: mounted ? 1 : 0,
                 transition: "opacity 800ms ease 200ms",
               }}
@@ -210,7 +214,6 @@ const SplashScreen = () => {
                 alt="Medical Intelligence"
                 sx={{
                   width: "100%",
-                  maxWidth: 450,
                   height: "auto",
                   filter: "drop-shadow(0 30px 50px rgba(15,76,129,0.15))",
                 }}

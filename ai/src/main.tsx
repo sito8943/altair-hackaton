@@ -2,6 +2,7 @@ import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import SplashScreen from './components/SplashScreen'
+import { brandColors } from './theme'
 import './index.css'
 
 const IntakeApp = lazy(() => import('./App'))
@@ -13,7 +14,7 @@ const FullScreenLoader = () => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#0f4c81',
+      backgroundColor: brandColors.primary,
       color: '#fff',
       fontFamily: 'Inter, system-ui, sans-serif',
       letterSpacing: 1,

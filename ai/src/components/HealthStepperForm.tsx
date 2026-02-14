@@ -16,6 +16,7 @@ import type { StepIconProps } from "@mui/material/StepIcon";
 import StepDemographics from "./StepDemographics";
 import StepVitals from "./StepVitals";
 import StepLifestyle from "./StepLifestyle";
+import { brandColors, brandGradients } from "../theme";
 import type {
   HealthFormErrors,
   HealthFormField,
@@ -123,8 +124,10 @@ const StepDot = ({ active, completed, className }: StepIconProps) => (
       width: 12,
       height: 12,
       borderRadius: "50%",
-      border: "2px solid #0f4c81",
-      backgroundColor: active || completed ? "#0f4c81" : "transparent",
+      border: `2px solid ${brandColors.primary}`,
+      backgroundColor: active || completed
+        ? brandColors.primary
+        : "transparent",
       transition: "all 0.3s ease",
       display: "inline-flex",
     }}
@@ -333,8 +336,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   bottom: 42,
                   left: "50%",
                   zIndex: 2,
-                  background:
-                    "linear-gradient(135deg, #071a3c 0%, #0f4c81 100%)",
+                  background: brandGradients.midnight,
                   color: "#fff",
                   padding: "10px 28px",
                   borderRadius: 14,
@@ -354,7 +356,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   transform: "translateX(-50%)",
                   borderWidth: "6px 6px 0 6px",
                   borderStyle: "solid",
-                  borderColor: "#0f4c81 transparent transparent transparent",
+                  borderColor: `${brandColors.primary} transparent transparent transparent`,
                   opacity: 0,
                   transition: "opacity 0.25s ease",
                 },

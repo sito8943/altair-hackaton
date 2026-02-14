@@ -9,50 +9,12 @@ import {
   Stack,
   ThemeProvider,
   Typography,
-  createTheme,
 } from "@mui/material";
 import Dashboard from "./components/Dashboard";
 import HealthStepperForm from "./components/HealthStepperForm";
 import { predictRisk } from "./services/api";
 import type { PredictionPayload, PredictionResult } from "./types";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#0f4c81",
-    },
-    secondary: {
-      main: "#00a8e8",
-    },
-    background: {
-      default: "#f5f7fb",
-      paper: "#ffffff",
-    },
-  },
-  typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h2: { fontWeight: 700 },
-  },
-  shape: { borderRadius: 16 },
-  components: {
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          border: "1px solid #e0e6f0",
-          boxShadow: "0 12px 40px rgba(15,76,129,0.06)",
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-          fontWeight: 600,
-        },
-      },
-    },
-  },
-});
+import theme, { brandColors, brandShadows } from "./theme";
 
 const App = () => {
   const [result, setResult] = useState<PredictionResult | null>(null);
@@ -93,18 +55,18 @@ const App = () => {
             direction="row"
             alignItems="center"
             spacing={2}
-            sx={{ mb: 3}}
+            sx={{ mb: 3 }}
           >
             <Box
               sx={{
                 width: 48,
                 height: 48,
                 borderRadius: 3,
-                bgcolor: "#0f4c81",
+                bgcolor: brandColors.primary,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0 8px 16px rgba(15,76,129,0.2)",
+                boxShadow: brandShadows.emblem,
               }}
             >
               <Typography variant="h6" sx={{ color: "white", fontWeight: 800 }}>
@@ -114,7 +76,7 @@ const App = () => {
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              sx={{ letterSpacing: 0.5, color: "#0f4c81" }}
+              sx={{ letterSpacing: 0.5, color: brandColors.primary }}
             >
               Health Risk Command Center
             </Typography>

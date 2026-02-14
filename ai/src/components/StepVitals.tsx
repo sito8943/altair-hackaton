@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import type { ChangeEvent } from "react";
 import type { HealthFormField, StepComponentProps } from "../types";
+import { formFieldStyles, glassPanelCardSx } from "../theme";
 
 type FieldEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -25,33 +26,10 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
     onChange(name as HealthFormField, value);
   };
 
-  const fieldStyles = {
-    "& .MuiOutlinedInput-root": {
-      borderRadius: 3,
-      backgroundColor: "#fff",
-      transition: "all 0.3s ease",
-      "& fieldset": { borderColor: "#e4ecf7" },
-      "&:hover fieldset": { borderColor: "#0f4c81" },
-      "&.Mui-focused fieldset": {
-        borderColor: "#0f4c81",
-        boxShadow: "0 0 0 3px rgba(15,76,129,0.08)",
-      },
-    },
-    "& .MuiInputLabel-root": {
-      fontWeight: 600,
-    },
-  };
-
   return (
     <Card
       elevation={0}
-      sx={{
-        borderRadius: 1,
-        border: '1px solid rgba(255,255,255,0.4)',
-        background: 'rgba(255,255,255,0.55)',
-        backdropFilter: 'blur(14px)',
-        boxShadow: '0 25px 60px rgba(9,29,66,0.12)',
-      }}
+      sx={glassPanelCardSx}
     >
       <CardContent sx={{ p: { xs: 3, md: 4 } }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
@@ -82,7 +60,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             error={Boolean(errors.bmi)}
             helperText={errors.bmi || "Body Mass Index"}
             InputProps={{ inputProps: { min: 0, step: 0.1 } }}
-            sx={fieldStyles}
+            sx={formFieldStyles}
           />
           <TextField
             fullWidth
@@ -94,7 +72,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             error={Boolean(errors.systolic_bp)}
             helperText={errors.systolic_bp || "mmHg"}
             InputProps={{ inputProps: { min: 50, max: 260 } }}
-            sx={fieldStyles}
+            sx={formFieldStyles}
           />
           <TextField
             fullWidth
@@ -106,7 +84,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             error={Boolean(errors.diastolic_bp)}
             helperText={errors.diastolic_bp || "mmHg"}
             InputProps={{ inputProps: { min: 30, max: 180 } }}
-            sx={fieldStyles}
+            sx={formFieldStyles}
           />
           <TextField
             fullWidth
@@ -118,7 +96,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             error={Boolean(errors.resting_heart_rate)}
             helperText={errors.resting_heart_rate || "Beats per minute"}
             InputProps={{ inputProps: { min: 30, max: 180 } }}
-            sx={fieldStyles}
+            sx={formFieldStyles}
           />
           <TextField
             fullWidth
@@ -133,7 +111,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
               "Count of conditions being managed"
             }
             InputProps={{ inputProps: { min: 0, max: 20 } }}
-            sx={fieldStyles}
+            sx={formFieldStyles}
           />
           <Box
             sx={{ gridColumn: { xs: "span 1", sm: "span 2", md: "span 3" } }}
@@ -151,7 +129,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
                   label="Recent Weight Change"
                   error={Boolean(errors.recent_weight_change)}
                   helperText={errors.recent_weight_change || "Prior 3 months"}
-                  sx={fieldStyles}
+                  sx={formFieldStyles}
                 />
               )}
             />
