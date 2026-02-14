@@ -59,6 +59,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
               fullWidth
               type="number"
               label="Age"
+              placeholder="35"
               name="age"
               value={values.age}
               onChange={handleChange}
@@ -80,6 +81,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
                 <TextField
                   {...params}
                   label="Sex"
+                  placeholder="Select sex"
                   error={Boolean(errors.sex)}
                   helperText={errors.sex || "Biologic sex as reported"}
                   sx={formFieldStyles}
@@ -99,6 +101,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
                 <TextField
                   {...params}
                   label="Education Level"
+                  placeholder="Select education"
                   error={Boolean(errors.education_level)}
                   helperText={
                     errors.education_level || "Highest completed tier"
@@ -120,6 +123,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
                 <TextField
                   {...params}
                   label="Employment Status"
+                  placeholder="Select status"
                   error={Boolean(errors.employment_status)}
                   helperText={
                     errors.employment_status || "Current role or designation"
@@ -141,6 +145,7 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
                 <TextField
                   {...params}
                   label="Marital Status"
+                  placeholder="Select status"
                   error={Boolean(errors.marital_status)}
                   helperText={
                     errors.marital_status || "Household / relationship status"

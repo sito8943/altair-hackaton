@@ -59,6 +59,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
             fullWidth
             type="number"
             label="Physical Activity (days/week)"
+            placeholder="3"
             name="physical_activity_days_per_week"
             value={values.physical_activity_days_per_week}
             onChange={handleChange}
@@ -74,6 +75,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
             fullWidth
             type="number"
             label="Avg Sleep (hours)"
+            placeholder="7.5"
             name="sleep_hours_avg"
             value={values.sleep_hours_avg}
             onChange={handleChange}
@@ -92,6 +94,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               <TextField
                 {...params}
                 label="Smoking Status"
+                placeholder="Select status"
                 error={Boolean(errors.smoking_status)}
                 helperText={errors.smoking_status || "Current tobacco exposure"}
                 sx={formFieldStyles}
@@ -108,6 +111,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               <TextField
                 {...params}
                 label="Alcohol Frequency"
+                placeholder="Select frequency"
                 error={Boolean(errors.alcohol_frequency)}
                 helperText={errors.alcohol_frequency || "Typical cadence"}
                 sx={formFieldStyles}
@@ -118,6 +122,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
             fullWidth
             type="number"
             label="Depressive Symptoms Score"
+            placeholder="0"
             name="depressive_symptoms_score"
             value={values.depressive_symptoms_score}
             onChange={handleChange}

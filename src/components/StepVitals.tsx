@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   CardContent,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -51,6 +52,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             fullWidth
             type="number"
             label="BMI"
+            placeholder="22.5"
             name="bmi"
             value={values.bmi}
             onChange={handleChange}
@@ -59,34 +61,60 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             InputProps={{ inputProps: { min: 0, step: 0.1 } }}
             sx={formFieldStyles}
           />
-          <TextField
-            fullWidth
-            type="number"
-            label="Systolic BP"
-            name="systolic_bp"
-            value={values.systolic_bp}
-            onChange={handleChange}
-            error={Boolean(errors.systolic_bp)}
-            helperText={errors.systolic_bp || "mmHg"}
-            InputProps={{ inputProps: { min: 50, max: 260 } }}
-            sx={formFieldStyles}
-          />
-          <TextField
-            fullWidth
-            type="number"
-            label="Diastolic BP"
-            name="diastolic_bp"
-            value={values.diastolic_bp}
-            onChange={handleChange}
-            error={Boolean(errors.diastolic_bp)}
-            helperText={errors.diastolic_bp || "mmHg"}
-            InputProps={{ inputProps: { min: 30, max: 180 } }}
-            sx={formFieldStyles}
-          />
+          <Box sx={{ gridColumn: { xs: "span 1", sm: "span 2" } }}>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              sx={{ mb: 1, fontWeight: 500 }}
+            >
+              Blood Pressure (mmHg)
+            </Typography>
+            <Stack direction="row" spacing={2} alignItems="flex-start">
+              <TextField
+                fullWidth
+                type="number"
+                label="Systolic"
+                placeholder="120"
+                name="systolic_bp"
+                value={values.systolic_bp}
+                onChange={handleChange}
+                error={Boolean(errors.systolic_bp)}
+                helperText={errors.systolic_bp}
+                InputProps={{ inputProps: { min: 50, max: 260 } }}
+                sx={formFieldStyles}
+              />
+              <Typography
+                variant="h4"
+                color="text.secondary"
+                sx={{
+                  alignSelf: "start",
+                  pt: 1,
+                  opacity: 0.5,
+                  fontWeight: 300,
+                }}
+              >
+                /
+              </Typography>
+              <TextField
+                fullWidth
+                type="number"
+                label="Diastolic"
+                placeholder="80"
+                name="diastolic_bp"
+                value={values.diastolic_bp}
+                onChange={handleChange}
+                error={Boolean(errors.diastolic_bp)}
+                helperText={errors.diastolic_bp}
+                InputProps={{ inputProps: { min: 30, max: 180 } }}
+                sx={formFieldStyles}
+              />
+            </Stack>
+          </Box>
           <TextField
             fullWidth
             type="number"
             label="Resting Heart Rate"
+            placeholder="72"
             name="resting_heart_rate"
             value={values.resting_heart_rate}
             onChange={handleChange}
@@ -99,6 +127,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             fullWidth
             type="number"
             label="Chronic Conditions"
+            placeholder="0"
             name="chronic_conditions_count"
             value={values.chronic_conditions_count}
             onChange={handleChange}
@@ -124,6 +153,7 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
                 <TextField
                   {...params}
                   label="Recent Weight Change"
+                  placeholder="Select change"
                   error={Boolean(errors.recent_weight_change)}
                   helperText={errors.recent_weight_change || "Prior 3 months"}
                   sx={formFieldStyles}
