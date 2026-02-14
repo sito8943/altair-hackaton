@@ -3,8 +3,31 @@
 }
 
 .hsf-step-panel {
-  animation: hsfFadeSlideIn 520ms var(--hsf-ease) both;
   will-change: transform, opacity;
+}
+
+.hsf-step-panel-transition-enter {
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+}
+
+.hsf-step-panel-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 520ms var(--hsf-ease),
+    transform 520ms var(--hsf-ease);
+}
+
+.hsf-step-panel-transition-exit {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hsf-step-panel-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-12px) scale(0.97);
+  transition: opacity 420ms var(--hsf-ease),
+    transform 420ms var(--hsf-ease);
 }
 
 .hsf-stepper .hsf-step {
@@ -108,7 +131,9 @@
   .hsf-alert,
   .hsf-form .MuiFormControl-root,
   .hsf-form .MuiAutocomplete-root,
-  .hsf-form .MuiSlider-root {
+  .hsf-form .MuiSlider-root,
+  .hsf-step-panel-transition-enter-active,
+  .hsf-step-panel-transition-exit-active {
     animation: none !important;
     transition: none !important;
   }

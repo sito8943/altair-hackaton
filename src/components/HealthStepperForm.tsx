@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { createRef, useEffect, useMemo, useState } from "react";
 import type { ComponentType, FormEvent } from "react";
 import {
   Alert,
   Box,
-  Fade,
   IconButton,
   Stack,
   Step,
@@ -22,6 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SendIcon from "@mui/icons-material/Send";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 import "../styles/healthStepperAnimations.css";
 import type {
   HealthFormErrors,
@@ -165,6 +165,10 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
     () => steps[activeStep].component,
     [activeStep]
   );
+  const stepRefs = useMemo(
+    () => steps.map(() => createRef<HTMLDivElement>()),
+    []
+  );
 
   const updateField = (field: HealthFormField, value: string | number) => {
     setValues((prev) => ({ ...prev, [field]: value }));
@@ -262,15 +266,24 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             {formMessage}
           </Alert>
         )}
-        <Fade key={activeStep} in timeout={500}>
-          <Box className="hsf-step-panel">
-            <CurrentStepComponent
-              values={values}
-              onChange={updateField}
-              errors={errors}
-            />
-          </Box>
-        </Fade>
+        <SwitchTransition mode="out-in">
+          <CSSTransition
+            key={activeStep}
+            timeout={{ enter: 520, exit: 420 }}
+            classNames="hsf-step-panel-transition"
+            nodeRef={stepRefs[activeStep]}
+            mountOnEnter
+            unmountOnExit
+          >
+            <Box ref={stepRefs[activeStep]} className="hsf-step-panel">
+              <CurrentStepComponent
+                values={values}
+                onChange={updateField}
+                errors={errors}
+              />
+            </Box>
+          </CSSTransition>
+        </SwitchTransition>
         <Box mt={3}>
           <Stepper
             activeStep={activeStep}
