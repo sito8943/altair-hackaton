@@ -292,6 +292,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   <Typography
                     className="hsf-step-label"
                     variant="body1"
+                    sx={{ fontSize: "14px" }}
                     fontWeight={activeStep === index ? 700 : 500}
                     color={
                       activeStep === index ? "primary.main" : "text.secondary"
@@ -312,7 +313,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
           sx={{ flex: 1, minWidth: 0 }}
         >
           {formMessage && (
-            <Alert severity="warning" sx={{ mt: 2 }} className="hsf-alert">
+            <Alert severity="warning" sx={{ mb: 2 }} className="hsf-alert">
               {formMessage}
             </Alert>
           )}

@@ -59,7 +59,7 @@
 
 .hsf-stepper-panel {
   flex: 0 0 260px;
-  padding: 28px 28px 40px;
+  padding: 28px 16px 40px;
   border-radius: 30px;
   background: linear-gradient(
     180deg,
@@ -140,6 +140,7 @@
 }
 
 .hsf-step-label {
+  font-size: 14px;
   transition: color 280ms var(--hsf-ease), transform 280ms var(--hsf-ease);
 }
 
@@ -149,6 +150,9 @@
 
 .hsf-alert {
   animation: hsfFadeIn 360ms var(--hsf-ease) both;
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .hsf-field-animated {
