@@ -3,12 +3,13 @@ import type { ComponentType, FormEvent } from "react";
 import {
   Alert,
   Box,
-  Button,
   Fade,
+  IconButton,
   Stack,
   Step,
   StepLabel,
   Stepper,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +18,10 @@ import StepDemographics from "./StepDemographics";
 import StepVitals from "./StepVitals";
 import StepLifestyle from "./StepLifestyle";
 import { brandColors, brandGradients } from "../theme";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import SendIcon from "@mui/icons-material/Send";
 import type {
   HealthFormErrors,
   HealthFormField,
@@ -125,9 +130,8 @@ const StepDot = ({ active, completed, className }: StepIconProps) => (
       height: 12,
       borderRadius: "50%",
       border: `2px solid ${brandColors.primary}`,
-      backgroundColor: active || completed
-        ? brandColors.primary
-        : "transparent",
+      backgroundColor:
+        active || completed ? brandColors.primary : "transparent",
       transition: "all 0.3s ease",
       display: "inline-flex",
     }}
@@ -262,41 +266,64 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
           mt={3}
           alignItems={{ xs: "stretch", sm: "center" }}
         >
-          <Button
-            variant="outlined"
-            color="inherit"
-            disabled={activeStep === 0 || loading}
-            sx={{ px: 4, borderRadius: 100 }}
-            onClick={handleBack}
-          >
-            Back
-          </Button>
-          <Button
-            variant="text"
-            color="inherit"
-            disabled={loading}
-            onClick={resetForm}
-            sx={{ px: 4, borderRadius: 100 }}
-          >
-            Reset
-          </Button>
+          <Tooltip title="Back" placement="top">
+            <span>
+              <IconButton
+                color="inherit"
+                size="large"
+                disabled={activeStep === 0 || loading}
+                onClick={handleBack}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+          <Tooltip title="Reset" placement="top">
+            <span>
+              <IconButton
+                color="inherit"
+                size="large"
+                disabled={loading}
+                onClick={resetForm}
+              >
+                <RestartAltIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            disableElevation
-            disabled={loading}
-            sx={{ px: 4, borderRadius: 100 }}
-            type={activeStep === steps.length - 1 ? "submit" : "button"}
-            onClick={activeStep === steps.length - 1 ? undefined : handleNext}
+          <Tooltip
+            title={
+              activeStep === steps.length - 1
+                ? loading
+                  ? "Submitting..."
+                  : "Submit Assessment"
+                : "Next"
+            }
+            placement="top"
           >
-            {activeStep === steps.length - 1
-              ? loading
-                ? "Submitting..."
-                : "Submit Assessment"
-              : "Next"}
-          </Button>
+            <span>
+              <IconButton
+                color="primary"
+                size="large"
+                disabled={loading}
+                type={activeStep === steps.length - 1 ? "submit" : "button"}
+                onClick={
+                  activeStep === steps.length - 1 ? undefined : handleNext
+                }
+                sx={{
+                  bgcolor: "white",
+                  boxShadow: "none",
+                  "&:hover": { bgcolor: "white" },
+                }}
+              >
+                {activeStep === steps.length - 1 ? (
+                  <SendIcon />
+                ) : (
+                  <ArrowForwardIcon />
+                )}
+              </IconButton>
+            </span>
+          </Tooltip>
         </Stack>
         {formMessage && (
           <Alert severity="warning" sx={{ mt: 2 }}>
@@ -309,7 +336,10 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
           activeStep={activeStep}
           alternativeLabel
           connector={null}
-          sx={{ justifyContent: "center", gap: 2 }}
+          sx={{
+            justifyContent: "center",
+            gap: 2,
+          }}
         >
           {steps.map((step, index) => (
             <Step
@@ -340,7 +370,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   color: "#fff",
                   padding: "10px 28px",
                   borderRadius: 14,
-                  boxShadow: "0 16px 40px rgba(6,24,58,0.35)",
+                  boxShadow: "none",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",

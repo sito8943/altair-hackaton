@@ -154,7 +154,7 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
                   "& .MuiSlider-track": { border: "none" },
                   "& .MuiSlider-rail": { opacity: 0.3 },
                   "& .MuiSlider-thumb": {
-                    boxShadow: "0 10px 20px rgba(9,29,66,0.15)",
+                    boxShadow: "none",
                     border: "3px solid #fff",
                   },
                   "& .MuiSlider-markLabel:first-of-type": { ml: 4 },

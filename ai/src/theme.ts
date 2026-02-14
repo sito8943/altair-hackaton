@@ -15,9 +15,9 @@ export const brandGradients = {
 };
 
 export const brandShadows = {
-  emblem: "0 8px 16px rgba(15,76,129,0.2)",
-  card: "0 25px 60px rgba(9,29,66,0.12)",
-  cta: "0 10px 20px rgba(15,76,129,0.3)",
+  emblem: "none",
+  card: "none",
+  cta: "none",
 };
 
 export const glassPanelCardSx: SxProps<Theme> = {
@@ -37,7 +37,7 @@ export const formFieldStyles: SxProps<Theme> = {
     "&:hover fieldset": { borderColor: brandColors.primary },
     "&.Mui-focused fieldset": {
       borderColor: brandColors.primary,
-      boxShadow: "0 0 0 3px rgba(15,76,129,0.08)",
+      boxShadow: "none",
     },
   },
   "& .MuiInputLabel-root": {
@@ -68,7 +68,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           border: "1px solid #e0e6f0",
-          boxShadow: "0 12px 40px rgba(15,76,129,0.06)",
+          boxShadow: "none",
         },
       },
     },

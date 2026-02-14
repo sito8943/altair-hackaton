@@ -196,7 +196,7 @@ const SplashScreen = () => {
               flex={0.8}
               sx={{
                 position: "relative",
-                display: "flex",
+                display: { xs: "none", md: "flex" },
                 justifyContent: "center",
                 alignItems: "center",
                 animation: "float 6s ease-in-out infinite",
