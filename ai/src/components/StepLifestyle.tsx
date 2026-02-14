@@ -15,9 +15,9 @@ import type { HealthFormField, StepComponentProps } from "../types";
 import { formFieldStyles, glassPanelCardSx } from "../theme";
 
 const stressMarks = [
-  { value: 1, label: "Calm" },
-  { value: 3, label: "Baseline" },
-  { value: 5, label: "Acute" },
+  { value: 0, label: "Calm" },
+  { value: 5, label: "Baseline" },
+  { value: 10, label: "Acute" },
 ];
 
 type FieldEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -129,23 +129,23 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               color="text.secondary"
               sx={{ mb: 1 }}
             >
-              Stress Level (1-5)
+              Stress Level (0-10)
             </Typography>
             <Stack direction="row" gap={3}>
               <SentimentSatisfiedAltIcon />
               <Slider
                 name="stress_level"
                 value={values.stress_level}
-                min={1}
-                max={5}
+                min={0}
+                max={10}
                 step={1}
                 marks={stressMarks}
                 onChange={handleSliderChange}
                 valueLabelDisplay="auto"
                 color={
-                  values.stress_level >= 4
+                  values.stress_level >= 7
                     ? "error"
-                    : values.stress_level >= 3
+                    : values.stress_level >= 4
                     ? "warning"
                     : "success"
                 }

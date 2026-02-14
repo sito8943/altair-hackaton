@@ -57,7 +57,7 @@ const initialValues: HealthFormValues = {
   sleep_hours_avg: "",
   smoking_status: "",
   alcohol_frequency: "",
-  stress_level: 3,
+  stress_level: 5,
   depressive_symptoms_score: "",
 };
 
