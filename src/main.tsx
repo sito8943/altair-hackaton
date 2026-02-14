@@ -6,6 +6,7 @@ import { brandColors } from './theme'
 import './index.css'
 
 const IntakeApp = lazy(() => import('./App'))
+const ResultView = lazy(() => import('./components/ResultView'))
 
 const FullScreenLoader = () => (
   <div
@@ -40,6 +41,7 @@ createRoot(rootElement).render(
           <Route path="/intake/demographics" element={<IntakeApp />} />
           <Route path="/intake/vitals" element={<IntakeApp />} />
           <Route path="/intake/lifestyle" element={<IntakeApp />} />
+          <Route path="/intake/result" element={<ResultView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

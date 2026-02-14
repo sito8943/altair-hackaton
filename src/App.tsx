@@ -1,31 +1,48 @@
 import { useState } from "react";
 import {
-  Alert,
   Box,
   Container,
   CssBaseline,
-  Fade,
   LinearProgress,
   Stack,
   ThemeProvider,
   Typography,
 } from "@mui/material";
-import Dashboard from "./components/Dashboard";
+import { useNavigate } from "react-router-dom";
 import HealthStepperForm from "./components/HealthStepperForm";
+import mockPredictionResult from "./data/mockPredictionResult";
 import { predictRisk } from "./services/api";
+import { LATEST_PREDICTION_RESULT_KEY } from "./constants/storageKeys";
 import type { PredictionPayload, PredictionResult } from "./types";
 import theme, { brandColors, brandShadows } from "./theme";
 
 const App = () => {
-  const [result, setResult] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const useMockApi = import.meta.env.DEV && import.meta.env.VITE_USE_REAL_API !== "true";
+
+  const persistAndNavigate = (prediction: PredictionResult) => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(
+        LATEST_PREDICTION_RESULT_KEY,
+        JSON.stringify(prediction)
+      );
+    }
+    navigate("/intake/result", { state: { result: prediction } });
+  };
+
   const handleSubmit = async (payload: PredictionPayload) => {
     setLoading(true);
     setError("");
     try {
+      if (useMockApi) {
+        await new Promise((resolve) => setTimeout(resolve, 750));
+        persistAndNavigate(mockPredictionResult);
+        return;
+      }
       const { data } = await predictRisk(payload);
-      setResult(data);
+      persistAndNavigate(data);
     } catch (err) {
       const fallbackMessage =
         "Unable to reach the prediction API. Verify the backend service and try again.";
@@ -77,18 +94,12 @@ const App = () => {
               Health Risk Command Center
             </Typography>
           </Stack>
-          <HealthStepperForm onSubmit={handleSubmit} loading={loading} />
+          <HealthStepperForm
+            onSubmit={handleSubmit}
+            loading={loading}
+            apiError={error}
+          />
           {loading && <LinearProgress sx={{ mt: 3 }} />}
-          {error && (
-            <Alert severity="error" sx={{ mt: 3 }}>
-              {error}
-            </Alert>
-          )}
-          <Fade in={Boolean(result)} timeout={400}>
-            <Box>
-              <Dashboard result={result} />
-            </Box>
-          </Fade>
         </Container>
       </Box>
     </ThemeProvider>

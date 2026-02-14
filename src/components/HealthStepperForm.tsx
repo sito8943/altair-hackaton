@@ -40,6 +40,7 @@ interface StepDefinition {
 interface HealthStepperFormProps {
   onSubmit: (payload: PredictionPayload) => void;
   loading: boolean;
+  apiError?: string;
 }
 
 const initialValues: HealthFormValues = {
@@ -146,7 +147,7 @@ const StepDot = ({ active, completed, className, icon }: StepIconProps) => (
   </Box>
 );
 
-const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
+const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const derivedStep = routeMap.indexOf(location.pathname);
@@ -315,6 +316,11 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             {formMessage && (
               <Alert severity="warning" className="hsf-alert" sx={{ mb: 2 }}>
                 {formMessage}
+              </Alert>
+            )}
+            {apiError && (
+              <Alert severity="error" className="hsf-alert" sx={{ mb: 2 }}>
+                {apiError}
               </Alert>
             )}
             <Box className="hsf-form-panel">
