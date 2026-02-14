@@ -9,8 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import type { ChangeEvent } from "react";
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
 import type { HealthFormField, StepComponentProps } from "../types";
 import { formFieldStyles, glassPanelCardSx } from "../theme";
 
@@ -116,6 +114,21 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               />
             )}
           />
+          <TextField
+            fullWidth
+            type="number"
+            label="Depressive Symptoms Score"
+            name="depressive_symptoms_score"
+            value={values.depressive_symptoms_score}
+            onChange={handleChange}
+            error={Boolean(errors.depressive_symptoms_score)}
+            helperText={
+              errors.depressive_symptoms_score ||
+              "Validated screening (PHQ-9, DASS-21, etc.)"
+            }
+            InputProps={{ inputProps: { min: 0, max: 27 } }}
+            sx={formFieldStyles}
+          />
           <Box
             sx={{
               gridColumn: { xs: "span 1", sm: "span 2", md: "span 3" },
@@ -165,21 +178,6 @@ const StepLifestyle = ({ values, onChange, errors }: StepComponentProps) => {
               </Typography>
             )}
           </Box>
-          <TextField
-            fullWidth
-            type="number"
-            label="Depressive Symptoms Score"
-            name="depressive_symptoms_score"
-            value={values.depressive_symptoms_score}
-            onChange={handleChange}
-            error={Boolean(errors.depressive_symptoms_score)}
-            helperText={
-              errors.depressive_symptoms_score ||
-              "Validated screening (PHQ-9, DASS-21, etc.)"
-            }
-            InputProps={{ inputProps: { min: 0, max: 27 } }}
-            sx={formFieldStyles}
-          />
         </Box>
       </CardContent>
     </Card>

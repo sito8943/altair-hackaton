@@ -10,7 +10,7 @@ export const brandColors = {
 };
 
 export const brandGradients = {
-  midnight: `linear-gradient(135deg, ${brandColors.midnight} 0%, ${brandColors.primary} 100%)`,
+  midnight: `linear-gradient(135deg, ${brandColors.midnight} 0%, #0c5fa3 100%)`,
   halo: `linear-gradient(135deg, rgba(15, 76, 129, 0.05) 0%, rgba(0, 167, 255, 0.05) 100%)`,
 };
 
@@ -42,6 +42,13 @@ export const formFieldStyles: SxProps<Theme> = {
   },
   "& .MuiInputLabel-root": {
     fontWeight: 600,
+    fontSize: 14,
+  },
+  "& input, & .MuiInputBase-input": {
+    fontSize: 14,
+    "&::placeholder": {
+      fontSize: 14,
+    },
   },
 };
 

@@ -60,6 +60,86 @@
   background-color: #f5f9ff;
 }
 
+.hsf-stepper-panel {
+  flex: 0 0 260px;
+  padding: 28px 28px 40px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.92) 0%, rgba(241, 251, 255, 0.95) 100%);
+  border: 1px solid rgba(15, 30, 50, 0.06);
+  box-shadow: none;
+  min-height: 100%;
+  animation: hsfPanelFloat 620ms var(--hsf-ease) both;
+}
+
+.form-shell {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  border: 1px solid rgba(15, 30, 50, 0.06);
+  border-radius: 24px;
+  padding: clamp(16px, 3vw, 36px);
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.98) 0%, rgba(241, 251, 255, 0.98) 100%);
+  box-sizing: border-box;
+}
+
+.form-shell .hsf-step-panel {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.hsf-stepper--vertical .MuiStepLabel-root {
+  align-items: center;
+  gap: 12px;
+}
+
+.hsf-stepper--vertical .MuiStepConnector-root {
+  display: none;
+}
+
+.hsf-stepper--vertical .MuiStep-root {
+  opacity: 0.7;
+  transition: opacity 300ms var(--hsf-ease), transform 300ms var(--hsf-ease);
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.hsf-stepper--vertical .MuiStep-root.Mui-active,
+.hsf-stepper--vertical .MuiStep-root.Mui-completed {
+  opacity: 1;
+  transform: none;
+}
+
+.hsf-stepper--vertical .MuiStep-root::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 40px;
+  height: calc(100% - 32px);
+  width: 2px;
+  background: linear-gradient(180deg, rgba(15, 76, 129, 0.15) 0%, rgba(15, 76, 129, 0.05) 100%);
+}
+
+.hsf-stepper--vertical .MuiStep-root:last-of-type::after {
+  display: none;
+}
+
+.hsf-stepper-panel .MuiTypography-h6 {
+  color: #0f4c81;
+}
+
+.hsf-stepper-panel .MuiStepLabel-label {
+  margin-top: 2px;
+}
+
+.hsf-step-label {
+  transition: color 280ms var(--hsf-ease), transform 280ms var(--hsf-ease);
+}
+
+.hsf-stepper--vertical .MuiStep-root.Mui-active .hsf-step-label {
+  transform: none;
+}
+
 .hsf-alert {
   animation: hsfFadeIn 360ms var(--hsf-ease) both;
 }
@@ -129,9 +209,22 @@
   }
 }
 
+@keyframes hsfPanelFloat {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hsf-step-panel,
+  .hsf-stepper-panel,
   .hsf-stepper .hsf-step,
+  .hsf-step-label,
   .hsf-icon-button,
   .hsf-alert,
   .hsf-field-animated,

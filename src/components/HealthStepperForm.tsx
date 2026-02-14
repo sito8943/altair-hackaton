@@ -122,21 +122,28 @@ const steps: StepDefinition[] = [
   },
 ];
 
-const StepDot = ({ active, completed, className }: StepIconProps) => (
+const StepDot = ({ active, completed, className, icon }: StepIconProps) => (
   <Box
     component="span"
     className={className}
     sx={{
-      width: 8,
-      height: 8,
+      width: 28,
+      height: 28,
       borderRadius: "50%",
       border: `2px solid ${brandColors.primary}`,
       backgroundColor:
         active || completed ? brandColors.primary : "transparent",
       transition: "all 0.3s ease",
       display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: active || completed ? "#fff" : brandColors.primary,
+      fontSize: 10,
+      fontWeight: 600,
     }}
-  />
+  >
+    {typeof icon === "number" || typeof icon === "string" ? icon : null}
+  </Box>
 );
 
 const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
@@ -255,197 +262,249 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
 
   return (
     <Box component="section" aria-label="Health data intake form">
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        noValidate
-        className="hsf-form"
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={{ xs: 3, md: 5 }}
+        alignItems="stretch"
       >
-        {formMessage && (
-          <Alert severity="warning" sx={{ mt: 2 }} className="hsf-alert">
-            {formMessage}
-          </Alert>
-        )}
-        <SwitchTransition mode="out-in">
-          <CSSTransition
-            key={activeStep}
-            timeout={{ enter: 520, exit: 420 }}
-            classNames="hsf-step-panel-transition"
-            nodeRef={stepRefs[activeStep]}
-            mountOnEnter
-            unmountOnExit
-          >
-            <Box ref={stepRefs[activeStep]} className="hsf-step-panel">
-              <CurrentStepComponent
-                values={values}
-                onChange={updateField}
-                errors={errors}
-              />
-            </Box>
-          </CSSTransition>
-        </SwitchTransition>
-        <Box mt={3}>
+        <Box
+          className="hsf-stepper-panel"
+          sx={{
+            width: { xs: "100%", md: 280 },
+            display: { xs: "none", md: "block" },
+          }}
+        >
+          <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+            Intake Journey
+          </Typography>
+          <Typography variant="h6" mb={3} fontWeight={700}>
+            Track your progress
+          </Typography>
           <Stepper
             activeStep={activeStep}
-            alternativeLabel
+            orientation="vertical"
             connector={null}
-            sx={{
-              justifyContent: "center",
-              gap: 2,
-            }}
-            className="hsf-stepper"
+            className="hsf-stepper hsf-stepper--vertical"
           >
             {steps.map((step, index) => (
-              <Step
-                key={step.label}
-                sx={{
-                  flex: 0,
-                  px: 0,
-                  position: "relative",
-                  "& .MuiStepLabel-root": {
-                    alignItems: "center",
-                  },
-                  "& .MuiStepIcon-root": {
-                    transform: activeStep === index ? "scale(1.4)" : "scale(1)",
-                    transition: "transform 0.35s ease",
-                  },
-                  "&:hover .MuiStepIcon-root": {
-                    transform: "scale(1.4)",
-                  },
-                  "& .step-label-text": {
-                    opacity: 0,
-                    transform: "translate(-50%, -2px) scale(0.92)",
-                    transition: "opacity 0.25s ease, transform 0.25s ease",
-                    pointerEvents: "none",
-                    position: "absolute",
-                    bottom: 42,
-                    left: "50%",
-                    zIndex: 2,
-                    background: brandGradients.midnight,
-                    color: "#fff",
-                    padding: "10px 28px",
-                    borderRadius: 14,
-                    boxShadow: "none",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    whiteSpace: "nowrap",
-                    textAlign: "center",
-                    letterSpacing: 0.1,
-                  },
-                  "& .step-label-text::after": {
-                    content: '""',
-                    position: "absolute",
-                    bottom: -6,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    borderWidth: "6px 6px 0 6px",
-                    borderStyle: "solid",
-                    borderColor: `${brandColors.primary} transparent transparent transparent`,
-                    opacity: 0,
-                    transition: "opacity 0.25s ease",
-                  },
-                  "&:hover .step-label-text": {
-                    opacity: 1,
-                    transform: "translate(-50%, -18px) scale(1)",
-                  },
-                  "&:hover .step-label-text::after": {
-                    opacity: 1,
-                  },
-                }}
-                className="hsf-step"
-              >
+              <Step key={step.label} className="hsf-step">
                 <StepLabel StepIconComponent={StepDot}>
-                  <Stack
-                    className="step-label-text"
-                    spacing={0.3}
-                    alignItems="center"
+                  <Typography
+                    className="hsf-step-label"
+                    variant="body1"
+                    fontWeight={activeStep === index ? 700 : 500}
+                    color={
+                      activeStep === index ? "primary.main" : "text.secondary"
+                    }
                   >
-                    <Typography variant="caption" color="primary.text">
-                      Step {index + 1}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      fontWeight={600}
-                      textAlign="center"
-                      sx={{ whiteSpace: "nowrap" }}
-                    >
-                      {step.label}
-                    </Typography>
-                  </Stack>
+                    {step.label}
+                  </Typography>
                 </StepLabel>
               </Step>
             ))}
           </Stepper>
         </Box>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          alignItems={{ xs: "stretch", sm: "center" }}
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          className="hsf-form"
+          sx={{ flex: 1, minWidth: 0 }}
         >
-          <Tooltip title="Back" placement="top">
-            <span>
-              <IconButton
-                color="inherit"
-                size="large"
-                disabled={activeStep === 0 || loading}
-                onClick={handleBack}
-                className="hsf-icon-button"
-              >
-                <ArrowBackIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Reset" placement="top">
-            <span>
-              <IconButton
-                color="inherit"
-                size="large"
-                disabled={loading}
-                onClick={resetForm}
-                className="hsf-icon-button"
-              >
-                <RestartAltIcon />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Box sx={{ flexGrow: 1 }} />
-          <Tooltip
-            title={
-              activeStep === steps.length - 1
-                ? loading
-                  ? "Submitting..."
-                  : "Submit Assessment"
-                : "Next"
-            }
-            placement="top"
+          {formMessage && (
+            <Alert severity="warning" sx={{ mt: 2 }} className="hsf-alert">
+              {formMessage}
+            </Alert>
+          )}
+          <Box
+            className="form-shell"
+            sx={{ border: "1px solid rgba(15, 30, 50, 0.06)", borderRadius: 1 }}
           >
-            <span>
-              <IconButton
-                color="primary"
-                size="large"
-                disabled={loading}
-                type={activeStep === steps.length - 1 ? "submit" : "button"}
-                onClick={
-                  activeStep === steps.length - 1 ? undefined : handleNext
-                }
-                sx={{
-                  bgcolor: "white",
-                  boxShadow: "none",
-                  "&:hover": { bgcolor: "white" },
-                }}
-                className="hsf-icon-button hsf-icon-button--primary"
+            <SwitchTransition mode="out-in">
+              <CSSTransition
+                key={activeStep}
+                timeout={{ enter: 520, exit: 420 }}
+                classNames="hsf-step-panel-transition"
+                nodeRef={stepRefs[activeStep]}
+                mountOnEnter
+                unmountOnExit
               >
-                {activeStep === steps.length - 1 ? (
-                  <SendIcon />
-                ) : (
-                  <ArrowForwardIcon />
-                )}
-              </IconButton>
-            </span>
-          </Tooltip>
-        </Stack>
-      </Box>
+                <Box ref={stepRefs[activeStep]} className="hsf-step-panel">
+                  <CurrentStepComponent
+                    values={values}
+                    onChange={updateField}
+                    errors={errors}
+                  />
+                </Box>
+              </CSSTransition>
+            </SwitchTransition>
+          </Box>
+          <Box mt={3} display={{ xs: "block", md: "none" }}>
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel
+              connector={null}
+              sx={{
+                justifyContent: "center",
+                gap: 2,
+              }}
+              className="hsf-stepper"
+            >
+              {steps.map((step, index) => (
+                <Step
+                  key={step.label}
+                  sx={{
+                    flex: 0,
+                    px: 0,
+                    position: "relative",
+                    "& .MuiStepLabel-root": {
+                      alignItems: "center",
+                    },
+                    "& .MuiStepIcon-root": {
+                      transform:
+                        activeStep === index ? "scale(1.4)" : "scale(1)",
+                      transition: "transform 0.35s ease",
+                    },
+                    "&:hover .MuiStepIcon-root": {
+                      transform: "scale(1.4)",
+                    },
+                    "& .step-label-text": {
+                      opacity: 0,
+                      transform: "translate(-50%, -2px) scale(0.92)",
+                      transition: "opacity 0.25s ease, transform 0.25s ease",
+                      pointerEvents: "none",
+                      position: "absolute",
+                      bottom: 42,
+                      left: "50%",
+                      zIndex: 2,
+                      background: brandGradients.midnight,
+                      color: "#fff",
+                      padding: "10px 28px",
+                      borderRadius: 14,
+                      boxShadow: "none",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      whiteSpace: "nowrap",
+                      textAlign: "center",
+                      letterSpacing: 0.1,
+                    },
+                    "& .step-label-text::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: -6,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      borderWidth: "6px 6px 0 6px",
+                      borderStyle: "solid",
+                      borderColor: `${brandColors.primary} transparent transparent transparent`,
+                      opacity: 0,
+                      transition: "opacity 0.25s ease",
+                    },
+                    "&:hover .step-label-text": {
+                      opacity: 1,
+                      transform: "translate(-50%, -18px) scale(1)",
+                    },
+                    "&:hover .step-label-text::after": {
+                      opacity: 1,
+                    },
+                  }}
+                  className="hsf-step"
+                >
+                  <StepLabel StepIconComponent={StepDot}>
+                    <Stack
+                      className="step-label-text"
+                      spacing={0.3}
+                      alignItems="center"
+                    >
+                      <Typography variant="caption" color="primary.text">
+                        Step {index + 1}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        textAlign="center"
+                        sx={{ whiteSpace: "nowrap" }}
+                      >
+                        {step.label}
+                      </Typography>
+                    </Stack>
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            alignItems={{ xs: "stretch", sm: "center" }}
+            justifyContent="space-between"
+            sx={{ mt: { xs: 3, md: 3 } }}
+          >
+            <Tooltip title="Back" placement="top">
+              <span>
+                <IconButton
+                  color="inherit"
+                  size="large"
+                  disabled={activeStep === 0 || loading}
+                  onClick={handleBack}
+                  className="hsf-icon-button"
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip title="Reset" placement="top">
+              <span>
+                <IconButton
+                  color="inherit"
+                  size="large"
+                  disabled={loading}
+                  onClick={resetForm}
+                  className="hsf-icon-button"
+                >
+                  <RestartAltIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Box sx={{ flexGrow: 1 }} />
+            <Tooltip
+              title={
+                activeStep === steps.length - 1
+                  ? loading
+                    ? "Submitting..."
+                    : "Submit Assessment"
+                  : "Next"
+              }
+              placement="top"
+            >
+              <span>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  disabled={loading}
+                  type={activeStep === steps.length - 1 ? "submit" : "button"}
+                  onClick={
+                    activeStep === steps.length - 1 ? undefined : handleNext
+                  }
+                  sx={{
+                    bgcolor: "white",
+                    boxShadow: "none",
+                    "&:hover": { bgcolor: "white" },
+                  }}
+                  className="hsf-icon-button hsf-icon-button--primary"
+                >
+                  {activeStep === steps.length - 1 ? (
+                    <SendIcon />
+                  ) : (
+                    <ArrowForwardIcon />
+                  )}
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Stack>
+        </Box>
+      </Stack>
     </Box>
   );
 };
