@@ -48,16 +48,25 @@ const panelCardSx: SxProps<Theme> = {
   boxShadow: "none",
 };
 
-// 12-column Bento grid (percent tracks) to balance modules responsively
+// 12-column Bento grid using calc-based percentages to avoid overflow from gaps
 const dashboardGridSx: SxProps<Theme> = {
+  "--grid-gap-sm": (theme) => theme.spacing(2.5),
+  "--grid-gap-md": (theme) => theme.spacing(3),
   display: "grid",
   gridTemplateColumns: {
     xs: "100%",
-    sm: "repeat(2, 50%)",
-    md: "repeat(12, 8.3333%)",
+    sm: "repeat(2, calc((100% - var(--grid-gap-sm)) / 2))",
+    md: "repeat(12, calc((100% - 11 * var(--grid-gap-md)) / 12))",
   },
   gridAutoRows: "auto",
-  gap: { xs: 2.5, md: 3 },
+  columnGap: {
+    xs: "var(--grid-gap-sm)",
+    md: "var(--grid-gap-md)",
+  },
+  rowGap: {
+    xs: "var(--grid-gap-sm)",
+    md: "var(--grid-gap-md)",
+  },
   alignItems: "stretch",
 };
 
