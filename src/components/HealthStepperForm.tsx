@@ -310,13 +310,38 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
           onSubmit={handleSubmit}
           noValidate
           className="hsf-form"
-          sx={{ flex: 1, minWidth: 0 }}
+          sx={{ flex: 1, minWidth: 0, position: "relative" }}
         >
           {formMessage && (
             <Alert severity="warning" sx={{ mb: 2 }} className="hsf-alert">
               {formMessage}
             </Alert>
           )}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              mb: 2,
+              position: "absolute",
+              zIndex: 24,
+              right: "9px",
+              top: "26px",
+            }}
+          >
+            <Tooltip title="Reset" placement="top">
+              <span>
+                <IconButton
+                  color="inherit"
+                  size="large"
+                  disabled={loading}
+                  onClick={resetForm}
+                  className="hsf-icon-button"
+                >
+                  <RestartAltIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
           <Box
             className="form-shell"
             sx={{ border: "1px solid rgba(15, 30, 50, 0.06)", borderRadius: 1 }}
@@ -452,19 +477,6 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   className="hsf-icon-button"
                 >
                   <ArrowBackIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
-            <Tooltip title="Reset" placement="top">
-              <span>
-                <IconButton
-                  color="inherit"
-                  size="large"
-                  disabled={loading}
-                  onClick={resetForm}
-                  className="hsf-icon-button"
-                >
-                  <RestartAltIcon />
                 </IconButton>
               </span>
             </Tooltip>
