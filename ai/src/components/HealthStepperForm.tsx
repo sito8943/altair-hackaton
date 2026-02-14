@@ -263,7 +263,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             variant="outlined"
             color="inherit"
             disabled={activeStep === 0 || loading}
-            sx={{ px: 4 }}
+            sx={{ px: 4, borderRadius: 100 }}
             onClick={handleBack}
           >
             Back
@@ -273,7 +273,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             color="inherit"
             disabled={loading}
             onClick={resetForm}
-            sx={{ px: 4 }}
+            sx={{ px: 4, borderRadius: 100 }}
           >
             Reset
           </Button>
@@ -284,7 +284,7 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
             size="large"
             disableElevation
             disabled={loading}
-            sx={{ px: 4 }}
+            sx={{ px: 4, borderRadius: 100 }}
             type={activeStep === steps.length - 1 ? "submit" : "button"}
             onClick={activeStep === steps.length - 1 ? undefined : handleNext}
           >
@@ -301,21 +301,21 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
           </Alert>
         )}
       </Box>
-      <Box mt={4}>
+      <Box mt={3}>
         <Stepper
           activeStep={activeStep}
           alternativeLabel
           connector={null}
-          sx={{ justifyContent: "center" }}
+          sx={{ justifyContent: "center", gap: 2 }}
         >
           {steps.map((step, index) => (
             <Step
               key={step.label}
               sx={{
-                flex: 1,
-                px: 1,
+                flex: 0,
+                px: 0,
+                position: "relative",
                 "& .MuiStepLabel-root": {
-                  cursor: "pointer",
                   alignItems: "center",
                 },
                 "& .MuiStepIcon-root": {
@@ -325,15 +325,45 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   transform: "scale(1.4)",
                 },
                 "& .step-label-text": {
-                  opacity: activeStep === index ? 1 : 0,
-                  transform:
-                    activeStep === index ? "translateY(0)" : "translateY(8px)",
-                  transition: "all 0.3s ease",
+                  opacity: 0,
+                  transform: "translate(-50%, -2px) scale(0.92)",
+                  transition: "opacity 0.25s ease, transform 0.25s ease",
                   pointerEvents: "none",
+                  position: "absolute",
+                  bottom: 42,
+                  left: "50%",
+                  zIndex: 2,
+                  background:
+                    "linear-gradient(135deg, #071a3c 0%, #0f4c81 100%)",
+                  color: "#fff",
+                  padding: "10px 28px",
+                  borderRadius: 14,
+                  boxShadow: "0 16px 40px rgba(6,24,58,0.35)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  whiteSpace: "nowrap",
+                  textAlign: "center",
+                  letterSpacing: 0.1,
+                },
+                "& .step-label-text::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: -6,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  borderWidth: "6px 6px 0 6px",
+                  borderStyle: "solid",
+                  borderColor: "#0f4c81 transparent transparent transparent",
+                  opacity: 0,
+                  transition: "opacity 0.25s ease",
                 },
                 "&:hover .step-label-text": {
                   opacity: 1,
-                  transform: "translateY(0)",
+                  transform: "translate(-50%, -18px) scale(1)",
+                },
+                "&:hover .step-label-text::after": {
+                  opacity: 1,
                 },
               }}
             >
@@ -343,10 +373,15 @@ const HealthStepperForm = ({ onSubmit, loading }: HealthStepperFormProps) => {
                   spacing={0.3}
                   alignItems="center"
                 >
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="primary.text">
                     Step {index + 1}
                   </Typography>
-                  <Typography variant="body2" fontWeight={600}>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    textAlign="center"
+                    sx={{ whiteSpace: "nowrap" }}
+                  >
                     {step.label}
                   </Typography>
                 </Stack>
