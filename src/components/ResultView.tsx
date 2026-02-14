@@ -48,6 +48,33 @@ const panelCardSx: SxProps<Theme> = {
   boxShadow: "none",
 };
 
+// 12-column Bento grid (percent tracks) to balance modules responsively
+const dashboardGridSx: SxProps<Theme> = {
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "100%",
+    sm: "repeat(2, 50%)",
+    md: "repeat(12, 8.3333%)",
+  },
+  gridAutoRows: "auto",
+  gap: { xs: 2.5, md: 3 },
+  alignItems: "stretch",
+};
+
+// Utility helper to express module spans within the 12-column layout
+const gridColumnSpan = (mdSpan: number, smSpan = 2): SxProps<Theme> => ({
+  gridColumn: {
+    xs: "1 / -1",
+    sm: `span ${smSpan}`,
+    md: `span ${mdSpan}`,
+  },
+});
+
+const cardPlacementSx = (mdSpan: number, smSpan = 2): SxProps<Theme> => ({
+  ...panelCardSx,
+  ...gridColumnSpan(mdSpan, smSpan),
+});
+
 const formatFactorName = (name: string) =>
   name.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
@@ -276,106 +303,111 @@ const ResultView = () => {
                 </Button>
               </Stack>
             </Stack>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={7}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Stack spacing={2}>
-                      <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                        Predictive summary
+            <Box sx={dashboardGridSx}>
+              {/* Row 1 · Predictive summary spans 6/12 (~50%) */}
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
+                <CardContent>
+                  <Stack spacing={2}>
+                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                      Predictive summary
+                    </Typography>
+                    <Stack
+                      direction={{ xs: "column", lg: "row" }}
+                      spacing={3}
+                      alignItems={{ xs: "flex-start", lg: "center" }}
+                    >
+                      <Typography variant="h3" fontWeight={700}>
+                        {percentScore}%
                       </Typography>
-                      <Stack
-                        direction={{ xs: "column", lg: "row" }}
-                        spacing={3}
-                        alignItems={{ xs: "flex-start", lg: "center" }}
-                      >
-                        <Typography variant="h3" fontWeight={700}>
-                          {percentScore}%
-                        </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                          <Chip
-                            label={overall?.risk_level || "Unknown"}
+                      <Stack direction="row" spacing={2} alignItems="center">
+                        <Chip
+                          label={overall?.risk_level || "Unknown"}
+                          color={trendIncreasing ? "error" : "success"}
+                          sx={{ fontWeight: 600 }}
+                        />
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                        >
+                          <TrendingUpIcon
                             color={trendIncreasing ? "error" : "success"}
-                            sx={{ fontWeight: 600 }}
                           />
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
-                          >
-                            <TrendingUpIcon
-                              color={trendIncreasing ? "error" : "success"}
-                            />
-                            <Typography variant="body2" color="text.secondary">
-                              {trendSignal || "No longitudinal trend"}
-                            </Typography>
-                          </Stack>
+                          <Typography variant="body2" color="text.secondary">
+                            {trendSignal || "No longitudinal trend"}
+                          </Typography>
                         </Stack>
                       </Stack>
+                    </Stack>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Normalized 0-1
+                      </Typography>
+                      <LinearProgress
+                        variant="determinate"
+                        value={percentScore}
+                        color={trendIncreasing ? "error" : "success"}
+                        sx={{ mt: 1, height: 10, borderRadius: 999 }}
+                      />
+                    </Box>
+                    <Stack
+                      direction={{ xs: "column", sm: "row" }}
+                      spacing={3}
+                    >
                       <Box>
                         <Typography variant="caption" color="text.secondary">
-                          Normalized 0-1
+                          Highest risk disease
                         </Typography>
-                        <LinearProgress
-                          variant="determinate"
-                          value={percentScore}
-                          color={trendIncreasing ? "error" : "success"}
-                          sx={{ mt: 1, height: 10, borderRadius: 999 }}
-                        />
+                        <Typography variant="h6" fontWeight={600}>
+                          {formatDiseaseName(overall?.highest_risk_disease)}
+                        </Typography>
                       </Box>
-                      <Stack
-                        direction={{ xs: "column", sm: "row" }}
-                        spacing={3}
-                      >
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">
-                            Highest risk disease
-                          </Typography>
-                          <Typography variant="h6" fontWeight={600}>
-                            {formatDiseaseName(overall?.highest_risk_disease)}
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography variant="caption" color="text.secondary">
-                            Data quality confidence
-                          </Typography>
-                          <Typography variant="h6" fontWeight={600}>
-                            {Math.round(
-                              (overall?.data_quality_score ?? 0) * 100
-                            )}
-                            %
-                          </Typography>
-                        </Box>
-                      </Stack>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Data quality confidence
+                        </Typography>
+                        <Typography variant="h6" fontWeight={600}>
+                          {Math.round(
+                            (overall?.data_quality_score ?? 0) * 100
+                          )}
+                          %
+                        </Typography>
+                      </Box>
                     </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={5}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Risk gauge
-                    </Typography>
-                    <Box sx={{ height: 280, mt: 1 }}>
-                      <RiskGauge score={overall?.risk_score} />
-                    </Box>
-                    <Typography variant="body2" color="text.secondary" mt={1}>
-                      Normalized score to size the probability.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
+                  </Stack>
+                </CardContent>
+              </Card>
+              {/* Row 1 · Risk gauge spans 6/12 (~50%) */}
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Risk gauge
+                  </Typography>
+                  <Box sx={{ height: 280, mt: 1 }}>
+                    <RiskGauge score={overall?.risk_score} />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" mt={1}>
+                    Normalized score to size the probability.
+                  </Typography>
+                </CardContent>
+              </Card>
 
-            <Box>
-              <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                Disease risk cards
-              </Typography>
-              <Grid container spacing={2} mt={1}>
-                {diseaseCards.map((disease) => {
-                  const probabilityPercent = Math.round(
-                    (disease.risk_probability ?? 0) * 100
+              {/* Row 2 · Disease risk cards span 4/12 (~33%) */}
+              <Box
+                sx={{
+                  ...gridColumnSpan(4),
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1.5,
+                }}
+              >
+                <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                  Disease risk cards
+                </Typography>
+                <Grid container spacing={2} mt={1}>
+                  {diseaseCards.map((disease) => {
+                    const probabilityPercent = Math.round(
+                      (disease.risk_probability ?? 0) * 100
                   );
                   const diseaseTrend = disease.trend_signal || "stable";
                   const isIncreasing = diseaseTrend
@@ -446,420 +478,404 @@ const ResultView = () => {
               </Grid>
             </Box>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Risk radar
-                    </Typography>
-                    <Box sx={{ height: 320, mt: 1 }}>
-                      {radarData.length ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <RadarChart
-                            data={radarData}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius="80%"
-                          >
-                            <PolarGrid />
-                            <PolarAngleAxis dataKey="metric" />
-                            <PolarRadiusAxis
-                              angle={30}
-                              domain={[0, 100]}
-                              tickCount={4}
-                            />
-                            {diseaseCards.slice(0, 4).map((disease, idx) => {
-                              const label = formatDiseaseName(disease.disease);
-                              return (
-                                <Radar
-                                  key={`radar-${label}`}
-                                  name={label}
-                                  dataKey={label}
-                                  stroke={radarColors[idx % radarColors.length]}
-                                  fill={radarColors[idx % radarColors.length]}
-                                  fillOpacity={0.25}
-                                />
-                              );
-                            })}
-                          </RadarChart>
-                        </ResponsiveContainer>
-                      ) : (
-                        <Typography color="text.secondary">
-                          Not enough disease data to render radar.
-                        </Typography>
-                      )}
-                    </Box>
-                    <Typography variant="caption" color="text.secondary">
-                      Axes show probability, input confidence, and trend
-                      direction.
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      What-if simulator
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" mt={1}>
-                      Adjust lifestyle levers to preview how risk could shift.
-                    </Typography>
-                    <Stack spacing={2.5} mt={3}>
-                      <Box>
-                        <Typography fontWeight={600}>
-                          Average sleep hours
-                        </Typography>
-                        <Slider
-                          value={whatIfValues.sleep}
-                          onChange={handleWhatIfChange("sleep")}
-                          step={0.5}
-                          min={4}
-                          max={9}
-                          valueLabelDisplay="auto"
-                        />
-                      </Box>
-                      <Box>
-                        <Typography fontWeight={600}>
-                          Activity days / week
-                        </Typography>
-                        <Slider
-                          value={whatIfValues.activity}
-                          onChange={handleWhatIfChange("activity")}
-                          step={1}
-                          min={0}
-                          max={7}
-                          valueLabelDisplay="auto"
-                        />
-                      </Box>
-                      <Box>
-                        <Typography fontWeight={600}>Stress score</Typography>
-                        <Slider
-                          value={whatIfValues.stress}
-                          onChange={handleWhatIfChange("stress")}
-                          step={1}
-                          min={1}
-                          max={10}
-                          valueLabelDisplay="auto"
-                        />
-                      </Box>
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      spacing={3}
-                      mt={3}
-                      alignItems="center"
-                    >
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Projected risk
-                        </Typography>
-                        <Typography variant="h4" fontWeight={700}>
-                          {Math.round(whatIfScore * 100)}%
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Delta vs. current
-                        </Typography>
-                        <Typography variant="h6" fontWeight={600}>
-                          {whatIfDelta > 0
-                            ? `+${whatIfDelta}%`
-                            : `${whatIfDelta}%`}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={7}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Stack spacing={2}>
-                      <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                        Disease explainability
-                      </Typography>
-                      <Typography variant="subtitle1" fontWeight={600}>
-                        {formatDiseaseName(primaryDisease?.disease)}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {explanationText}
-                      </Typography>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                          <Typography variant="caption" color="text.secondary">
-                            Top risk factors
-                          </Typography>
-                          <Stack spacing={1.5} mt={1}>
-                            {riskFactors.length ? (
-                              riskFactors.map((factor) => (
-                                <Box key={`risk-${factor.factor_name}`}>
-                                  <Typography fontWeight={600}>
-                                    {formatFactorName(factor.factor_name)}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                  >
-                                    Value: {factor.user_value} · Impact{" "}
-                                    {Math.round((factor.impact ?? 0) * 100)}%
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    Direction: {factor.direction}
-                                  </Typography>
-                                </Box>
-                              ))
-                            ) : (
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                No risk factors reported.
-                              </Typography>
-                            )}
-                          </Stack>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                          <Typography variant="caption" color="text.secondary">
-                            Protective factors
-                          </Typography>
-                          <Stack spacing={1.5} mt={1}>
-                            {protectiveFactors.length ? (
-                              protectiveFactors.map((factor) => (
-                                <Box key={`protect-${factor.factor_name}`}>
-                                  <Typography fontWeight={600}>
-                                    {formatFactorName(factor.factor_name)}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                  >
-                                    Value: {factor.user_value} · Impact{" "}
-                                    {Math.round((factor.impact ?? 0) * 100)}%
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    Direction: {factor.direction}
-                                  </Typography>
-                                </Box>
-                              ))
-                            ) : (
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
-                                No protective levers reported.
-                              </Typography>
-                            )}
-                          </Stack>
-                        </Grid>
-                      </Grid>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={5}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Data quality & alerts
-                    </Typography>
-                    <Stack spacing={2} mt={2}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Missing fields
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {dataQuality?.missing_fields?.length
-                            ? dataQuality.missing_fields.join(", ")
-                            : "None"}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Inconsistent fields
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {dataQuality?.inconsistent_fields?.length
-                            ? dataQuality.inconsistent_fields.join(", ")
-                            : "None"}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Confidence note
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {dataQuality?.confidence_note || "No note provided."}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Fairness & transparency
-                    </Typography>
-                    <Stack spacing={2} mt={2}>
-                      {fairnessMetrics.map((metric) => (
-                        <Box key={metric.label}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                          >
-                            <Typography fontWeight={600}>
-                              {metric.label}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {Math.round(metric.score * 100)}%
-                            </Typography>
-                          </Stack>
-                          <LinearProgress
-                            variant="determinate"
-                            value={metric.score * 100}
-                            sx={{ mt: 1, borderRadius: 999 }}
-                            color={
-                              metric.score > 0.9
-                                ? "success"
-                                : metric.score > 0.8
-                                ? "warning"
-                                : "error"
-                            }
-                          />
-                          <Typography variant="caption" color="text.secondary">
-                            {metric.note}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card elevation={0} sx={panelCardSx}>
-                  <CardContent>
-                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                      Vital signals
-                    </Typography>
-                    <Stack spacing={2} mt={2}>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Highest risk disease
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {formatDiseaseName(overall?.highest_risk_disease)}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Data quality score
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {Math.round((overall?.data_quality_score ?? 0) * 100)}
-                          %
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Missing fields
-                        </Typography>
-                        <Typography variant="body1" fontWeight={600}>
-                          {dataQuality?.missing_fields?.length
-                            ? dataQuality.missing_fields.join(", ")
-                            : "None"}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-
-            <Card elevation={0} sx={panelCardSx}>
-              <CardContent>
-                <Typography variant="overline" sx={{ letterSpacing: 2 }}>
-                  Actionable recommendations
-                </Typography>
-                <Stack spacing={2.5} mt={2}>
-                  {recommendedActions.map((action, index) => {
-                    const linkedFactor =
-                      riskFactors.length > 0
-                        ? riskFactors[index % riskFactors.length]
-                        : undefined;
-                    return (
-                      <Box
-                        key={action}
-                        sx={{
-                          display: "flex",
-                          gap: 2,
-                          alignItems: "flex-start",
-                          p: 1.5,
-                          borderRadius: 2,
-                          backgroundColor: "rgba(15,76,129,0.04)",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: "50%",
-                            backgroundColor: "rgba(102,187,106,0.15)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: "success.main",
-                            flexShrink: 0,
-                          }}
+              {/* Row 2 · Risk radar spans 4/12 (~33%) */}
+              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Risk radar
+                  </Typography>
+                  <Box sx={{ height: 320, mt: 1 }}>
+                    {radarData.length ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <RadarChart
+                          data={radarData}
+                          cx="50%"
+                          cy="50%"
+                          outerRadius="80%"
                         >
-                          <CheckCircleIcon fontSize="small" />
-                        </Box>
-                        <Box>
-                          <Typography fontWeight={600}>{action}</Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Follow up with care team for scheduling.
-                          </Typography>
-                          {linkedFactor && (
+                          <PolarGrid />
+                          <PolarAngleAxis dataKey="metric" />
+                          <PolarRadiusAxis
+                            angle={30}
+                            domain={[0, 100]}
+                            tickCount={4}
+                          />
+                          {diseaseCards.slice(0, 4).map((disease, idx) => {
+                            const label = formatDiseaseName(disease.disease);
+                            return (
+                              <Radar
+                                key={`radar-${label}`}
+                                name={label}
+                                dataKey={label}
+                                stroke={radarColors[idx % radarColors.length]}
+                                fill={radarColors[idx % radarColors.length]}
+                                fillOpacity={0.25}
+                              />
+                            );
+                          })}
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <Typography color="text.secondary">
+                        Not enough disease data to render radar.
+                      </Typography>
+                    )}
+                  </Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Axes show probability, input confidence, and trend
+                    direction.
+                  </Typography>
+                </CardContent>
+              </Card>
+              {/* Row 2 · What-if simulator spans 4/12 (~34%) */}
+              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    What-if simulator
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" mt={1}>
+                    Adjust lifestyle levers to preview how risk could shift.
+                  </Typography>
+                  <Stack spacing={2.5} mt={3}>
+                    <Box>
+                      <Typography fontWeight={600}>Average sleep hours</Typography>
+                      <Slider
+                        value={whatIfValues.sleep}
+                        onChange={handleWhatIfChange("sleep")}
+                        step={0.5}
+                        min={4}
+                        max={9}
+                        valueLabelDisplay="auto"
+                      />
+                    </Box>
+                    <Box>
+                      <Typography fontWeight={600}>
+                        Activity days / week
+                      </Typography>
+                      <Slider
+                        value={whatIfValues.activity}
+                        onChange={handleWhatIfChange("activity")}
+                        step={1}
+                        min={0}
+                        max={7}
+                        valueLabelDisplay="auto"
+                      />
+                    </Box>
+                    <Box>
+                      <Typography fontWeight={600}>Stress score</Typography>
+                      <Slider
+                        value={whatIfValues.stress}
+                        onChange={handleWhatIfChange("stress")}
+                        step={1}
+                        min={1}
+                        max={10}
+                        valueLabelDisplay="auto"
+                      />
+                    </Box>
+                  </Stack>
+                  <Stack
+                    direction="row"
+                    spacing={3}
+                    mt={3}
+                    alignItems="center"
+                  >
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Projected risk
+                      </Typography>
+                      <Typography variant="h4" fontWeight={700}>
+                        {Math.round(whatIfScore * 100)}%
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Delta vs. current
+                      </Typography>
+                      <Typography variant="h6" fontWeight={600}>
+                        {whatIfDelta > 0
+                          ? `+${whatIfDelta}%`
+                          : `${whatIfDelta}%`}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </CardContent>
+              </Card>
+
+              {/* Row 3 · Disease explainability spans 7/12 (~60%) */}
+              <Card elevation={0} sx={cardPlacementSx(7)}>
+                <CardContent>
+                  <Stack spacing={2}>
+                    <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                      Disease explainability
+                    </Typography>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      {formatDiseaseName(primaryDisease?.disease)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {explanationText}
+                    </Typography>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="caption" color="text.secondary">
+                          Top risk factors
+                        </Typography>
+                        <Stack spacing={1.5} mt={1}>
+                          {riskFactors.length ? (
+                            riskFactors.map((factor) => (
+                              <Box key={`risk-${factor.factor_name}`}>
+                                <Typography fontWeight={600}>
+                                  {formatFactorName(factor.factor_name)}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  Value: {factor.user_value} · Impact{" "}
+                                  {Math.round((factor.impact ?? 0) * 100)}%
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                >
+                                  Direction: {factor.direction}
+                                </Typography>
+                              </Box>
+                            ))
+                          ) : (
                             <Typography
-                              variant="caption"
+                              variant="body2"
                               color="text.secondary"
                             >
-                              Linked factor:{" "}
-                              {formatFactorName(linkedFactor.factor_name)}
+                              No risk factors reported.
                             </Typography>
                           )}
-                        </Box>
-                      </Box>
-                    );
-                  })}
-                </Stack>
-                {result.disclaimer && (
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    mt={3}
-                    display="block"
-                  >
-                    {result.disclaimer}
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="caption" color="text.secondary">
+                          Protective factors
+                        </Typography>
+                        <Stack spacing={1.5} mt={1}>
+                          {protectiveFactors.length ? (
+                            protectiveFactors.map((factor) => (
+                              <Box key={`protect-${factor.factor_name}`}>
+                                <Typography fontWeight={600}>
+                                  {formatFactorName(factor.factor_name)}
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                >
+                                  Value: {factor.user_value} · Impact{" "}
+                                  {Math.round((factor.impact ?? 0) * 100)}%
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                >
+                                  Direction: {factor.direction}
+                                </Typography>
+                              </Box>
+                            ))
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              No protective levers reported.
+                            </Typography>
+                          )}
+                        </Stack>
+                      </Grid>
+                    </Grid>
+                  </Stack>
+                </CardContent>
+              </Card>
+              {/* Row 3 · Data quality spans 5/12 (~40%) */}
+              <Card elevation={0} sx={cardPlacementSx(5)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Data quality & alerts
                   </Typography>
-                )}
-              </CardContent>
-            </Card>
+                  <Stack spacing={2} mt={2}>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Missing fields
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {dataQuality?.missing_fields?.length
+                          ? dataQuality.missing_fields.join(", ")
+                          : "None"}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Inconsistent fields
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {dataQuality?.inconsistent_fields?.length
+                          ? dataQuality.inconsistent_fields.join(", ")
+                          : "None"}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Confidence note
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {dataQuality?.confidence_note || "No note provided."}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </CardContent>
+              </Card>
+
+              {/* Row 4 · Fairness metrics spans 6/12 (~50%) */}
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Fairness & transparency
+                  </Typography>
+                  <Stack spacing={2} mt={2}>
+                    {fairnessMetrics.map((metric) => (
+                      <Box key={metric.label}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <Typography fontWeight={600}>{metric.label}</Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {Math.round(metric.score * 100)}%
+                          </Typography>
+                        </Stack>
+                        <LinearProgress
+                          variant="determinate"
+                          value={metric.score * 100}
+                          sx={{ mt: 1, borderRadius: 999 }}
+                          color={
+                            metric.score > 0.9
+                              ? "success"
+                              : metric.score > 0.8
+                              ? "warning"
+                              : "error"
+                          }
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          {metric.note}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </Card>
+              {/* Row 4 · Vital signals spans 6/12 (~50%) */}
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Vital signals
+                  </Typography>
+                  <Stack spacing={2} mt={2}>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Highest risk disease
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {formatDiseaseName(overall?.highest_risk_disease)}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Data quality score
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {Math.round((overall?.data_quality_score ?? 0) * 100)}%
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Missing fields
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {dataQuality?.missing_fields?.length
+                          ? dataQuality.missing_fields.join(", ")
+                          : "None"}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </CardContent>
+              </Card>
+              {/* Row 5 · Actionable recommendations span full width */}
+              <Card elevation={0} sx={cardPlacementSx(12)}>
+                <CardContent>
+                  <Typography variant="overline" sx={{ letterSpacing: 2 }}>
+                    Actionable recommendations
+                  </Typography>
+                  <Stack spacing={2.5} mt={2}>
+                    {recommendedActions.map((action, index) => {
+                      const linkedFactor =
+                        riskFactors.length > 0
+                          ? riskFactors[index % riskFactors.length]
+                          : undefined;
+                      return (
+                        <Box
+                          key={action}
+                          sx={{
+                            display: "flex",
+                            gap: 2,
+                            alignItems: "flex-start",
+                            p: 1.5,
+                            borderRadius: 2,
+                            backgroundColor: "rgba(15,76,129,0.04)",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: "rgba(102,187,106,0.15)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "success.main",
+                              flexShrink: 0,
+                            }}
+                          >
+                            <CheckCircleIcon fontSize="small" />
+                          </Box>
+                          <Box>
+                            <Typography fontWeight={600}>{action}</Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Follow up with care team for scheduling.
+                            </Typography>
+                            {linkedFactor && (
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
+                                Linked factor:{" "}
+                                {formatFactorName(linkedFactor.factor_name)}
+                              </Typography>
+                            )}
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                  </Stack>
+                  {result.disclaimer && (
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      mt={3}
+                      display="block"
+                    >
+                      {result.disclaimer}
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Box>
           </Stack>
         </Container>
       </Box>
