@@ -5,8 +5,11 @@ import {
   Container,
   Stack,
   Typography,
+  Paper,
+  Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 const SplashScreen = () => {
   const navigate = useNavigate();
@@ -19,12 +22,8 @@ const SplashScreen = () => {
     if (acknowledged) {
       navigate("/intake/demographics", { replace: true });
     }
+    setMounted(true);
   }, [navigate]);
-
-  useEffect(() => {
-    const animationFrame = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
 
   const handleBegin = () => {
     if (typeof window !== "undefined") {
@@ -37,135 +36,187 @@ const SplashScreen = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #e9f5ff 0%, #f7fbff 70%)",
-        color: "#042444",
+        display: "flex",
+        alignItems: "center",
+        background:
+          "radial-gradient(circle at 70% 20%, #f0f7ff 0%, #e9f1f9 100%)",
+        color: "#1a3353",
         position: "relative",
         overflow: "hidden",
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          width: { xs: 320, md: 520 },
-          height: { xs: 320, md: 520 },
-          borderRadius: "50%",
-          background: "rgba(15,76,129,0.15)",
-          top: { xs: "-160px", md: "-180px" },
-          right: { xs: "-100px", md: "-120px" },
-        },
       }}
     >
-      <Container
-        maxWidth="lg"
-        sx={{ position: "relative", zIndex: 1, py: { xs: 4, md: 6 }, px: { xs: 3, md: 4 } }}
-      >
-        <Stack spacing={8}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            sx={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(-20px)",
-              transition: "all 600ms ease",
-            }}
-          >
-            <Box
-              sx={{
-                width: 44,
-                height: 44,
-                borderRadius: "50%",
-                backgroundColor: "#0f4c81",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-              }}
-            >
-              HR
-            </Box>
-            <Typography variant="h6" fontWeight={700}>
-              Health Risk Command Center
-            </Typography>
-          </Stack>
+      <Box
+        sx={{
+          position: "absolute",
+          top: -100,
+          right: -100,
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background:
+            "linear-gradient(135deg, rgba(15, 76, 129, 0.05) 0%, rgba(0, 167, 255, 0.05) 100%)",
+          filter: "blur(80px)",
+        }}
+      />
+
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 4, md: 4 },
+            borderRadius: 8,
+            background: "none",
+            backgroundColor: "none",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255, 255, 255, 0.7)",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.05)",
+          }}
+        >
           <Stack
             direction={{ xs: "column", md: "row" }}
-            spacing={6}
+            spacing={8}
             alignItems="center"
-            sx={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? "translateY(0)" : "translateY(30px)",
-              transition: "all 700ms ease 120ms",
-            }}
           >
-            <Stack spacing={3} flex={1} textAlign={{ xs: "center", md: "left" }}>
-              <Typography
-                variant="overline"
-                sx={{ letterSpacing: 4, color: "#00a7ff" }}
-              >
-                Predict & Prevent
-              </Typography>
-              <Typography variant="h3" fontWeight={700} lineHeight={1.2}>
-                Proactive intelligence you can trust,
-                <Typography component="span" color="primary">
-                  {" "}
-                  when you need it most.
-                </Typography>
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                We pre-load our analytics engine and longitudinal monitoring
-                modules so your care team can act before risk escalates. Begin
-                the intake whenever you are ready—your progress is automatically
-                saved.
-              </Typography>
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                spacing={2}
-                justifyContent={{ xs: "center", md: "flex-start" }}
-              >
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={handleBegin}
-                  sx={{ width: { xs: "100%", sm: "auto" } }}
+            <Stack spacing={4} flex={1.2}>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: 3,
+                    bgcolor: "#0f4c81",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 8px 16px rgba(15,76,129,0.2)",
+                  }}
                 >
-                  Launch Intake
-                </Button>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: "white", fontWeight: 800 }}
+                  >
+                    HR
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={700}
+                  sx={{ letterSpacing: 0.5, color: "#0f4c81" }}
+                >
+                  Health Risk Command Center
+                </Typography>
               </Stack>
+
+              <Stack spacing={2}>
+                <Typography
+                  variant="overline"
+                  sx={{ letterSpacing: 3, color: "#00a7ff", fontWeight: 700 }}
+                >
+                  Predict & Prevent
+                </Typography>
+                <Typography
+                  variant="h2"
+                  fontWeight={800}
+                  sx={{
+                    lineHeight: 1.1,
+                    fontSize: { xs: "2.5rem", md: "3.5rem" },
+                    color: "#042444",
+                  }}
+                >
+                  Proactive intelligence you can trust,
+                  <Box
+                    component="span"
+                    sx={{ color: "#00a7ff", display: "block" }}
+                  >
+                    when you need it most.
+                  </Box>
+                </Typography>
+              </Stack>
+
+              <Divider
+                sx={{
+                  width: "60px",
+                  borderBottomWidth: 4,
+                  borderColor: "#00a7ff",
+                  borderRadius: 2,
+                }}
+              />
+
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "#546e7a",
+                  fontSize: "1.1rem",
+                  lineHeight: 1.6,
+                  maxWidth: 500,
+                }}
+              >
+                We pre-load our analytics engine and longitudinal monitoring
+                modules so your care team can act before risk escalates.
+              </Typography>
+
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleBegin}
+                endIcon={<ArrowForwardIcon />}
+                sx={{
+                  py: 2,
+                  px: 4,
+                  borderRadius: 3,
+                  fontSize: "1.1rem",
+                  textTransform: "none",
+                  fontWeight: 700,
+                  backgroundColor: "#0f4c81",
+                  boxShadow: "0 10px 20px rgba(15,76,129,0.3)",
+                  "&:hover": { backgroundColor: "#0a365c" },
+                  alignSelf: "flex-start",
+                }}
+              >
+                Launch Intake
+              </Button>
             </Stack>
+
             <Box
-              flex={1}
+              flex={0.8}
               sx={{
-                width: "100%",
-                maxWidth: 480,
                 position: "relative",
-                borderRadius: 6,
-                overflow: "hidden",
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? "translateX(0)" : "translateX(40px)",
-                transition: "all 700ms ease 220ms",
-                mx: { xs: "auto", md: 0 },
-                '&::after': {
-                  content: '""',
-                  position: "absolute",
-                  inset: 0,
-                  background: "linear-gradient(135deg, rgba(233,245,255,0.2), rgba(15,76,129,0.35))",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                animation: "float 6s ease-in-out infinite",
+                "@keyframes float": {
+                  "0%, 100%": { transform: "translateY(0)" },
+                  "50%": { transform: "translateY(-20px)" },
                 },
               }}
             >
-              <img
-                src="https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?auto=format&fit=crop&w=1000&q=80"
-                alt="Clinician ready to assist"
-                style={{
+              <Box
+                component="img"
+                src="URL_DE_LA_IMAGEN_GENERADA" // Reemplaza con la imagen de arriba
+                alt="Medical Intelligence"
+                sx={{
                   width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                  filter: "saturate(1.05) brightness(1.05)",
+                  maxWidth: 450,
+                  height: "auto",
+                  filter: "drop-shadow(0 30px 50px rgba(15,76,129,0.15))",
                 }}
               />
             </Box>
           </Stack>
-        </Stack>
+        </Paper>
+
+        <Typography
+          variant="caption"
+          sx={{
+            mt: 4,
+            display: "block",
+            textAlign: "center",
+            color: "#94a3b8",
+          }}
+        >
+          Your progress is automatically saved. Clinical Intake System v2.4
+        </Typography>
       </Container>
     </Box>
   );
