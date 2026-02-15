@@ -18,6 +18,14 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
     onChange(name as HealthFormField, value);
   };
 
+  const heightCm = Number(values.height_cm);
+  const weightKg = Number(values.weight_kg);
+  const heightMeters = heightCm > 0 ? heightCm / 100 : 0;
+  const calculatedBmi =
+    heightMeters > 0 && weightKg > 0
+      ? Number((weightKg / (heightMeters * heightMeters)).toFixed(1))
+      : null;
+
   return (
     <Card elevation={0} sx={glassPanelCardSx}>
       <CardContent sx={{ p: 0 }}>
@@ -42,13 +50,31 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
           <TextField
             fullWidth
             type="number"
-            label="BMI"
-            placeholder="22.5"
-            name="bmi"
-            value={values.bmi}
+            label="Height (cm)"
+            placeholder="170"
+            name="height_cm"
+            value={values.height_cm}
             onChange={handleChange}
-            error={Boolean(errors.bmi)}
-            helperText={errors.bmi || "Body Mass Index"}
+            error={Boolean(errors.height_cm)}
+            helperText={
+              errors.height_cm || "Enter height in centimeters"
+            }
+            InputProps={{ inputProps: { min: 0, step: 0.5 } }}
+            sx={formFieldStyles}
+          />
+          <TextField
+            fullWidth
+            type="number"
+            label="Weight (kg)"
+            placeholder="70"
+            name="weight_kg"
+            value={values.weight_kg}
+            onChange={handleChange}
+            error={Boolean(errors.weight_kg)}
+            helperText={
+              errors.weight_kg ||
+              (calculatedBmi ? `Calculated BMI: ${calculatedBmi}` : "Enter weight in kilograms")
+            }
             InputProps={{ inputProps: { min: 0, step: 0.1 } }}
             sx={formFieldStyles}
           />

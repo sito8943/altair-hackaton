@@ -48,7 +48,8 @@ export interface HealthFormValues {
   education_level: string
   employment_status: string
   marital_status: string
-  bmi: string
+  height_cm: string
+  weight_kg: string
   systolic_bp: string
   diastolic_bp: string
   resting_heart_rate: string

@@ -148,14 +148,25 @@ const HealthStepperForm = ({
     setResetDialogOpen(false);
   };
 
+  const calculateBmi = () => {
+    const height = Number(values.height_cm);
+    const weight = Number(values.weight_kg);
+    if (!height || !weight) return 0;
+    const meters = height / 100;
+    if (!meters) return 0;
+    const bmiValue = weight / (meters * meters);
+    return Number(bmiValue.toFixed(1));
+  };
+
   const formatPayload = (): PredictionPayload => {
+    const computedBmi = calculateBmi();
     const payload: PredictionPayload = {
       age: Number(values.age),
       sex: values.sex,
       education_level: values.education_level,
       employment_status: values.employment_status,
       marital_status: values.marital_status,
-      bmi: Number(values.bmi),
+      bmi: computedBmi,
       systolic_bp: Number(values.systolic_bp),
       diastolic_bp: Number(values.diastolic_bp),
       resting_heart_rate: Number(values.resting_heart_rate),
