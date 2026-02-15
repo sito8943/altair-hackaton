@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
   Container,
   CssBaseline,
@@ -11,20 +12,20 @@ import {
 import { useNavigate } from "react-router-dom";
 import HealthStepperForm from "./components/HealthStepperForm";
 import mockPredictionResult from "./data/mockPredictionResult";
-import { predictRisk } from "./services/api";
+import { checkApiHealth, predictRisk } from "./services/api";
 import { LATEST_PREDICTION_RESULT_KEY } from "./constants/storageKeys";
 import { normalizePredictionResult } from "./utils/normalizeResult";
 import type { PredictionPayload, PredictionResult } from "./types";
 import theme, { brandColors, brandShadows } from "./theme";
+import { ENABLE_MOCK_API } from "./config/featureFlags";
 
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [healthMessage, setHealthMessage] = useState("");
+  const [healthError, setHealthError] = useState(false);
   const navigate = useNavigate();
-  const dataSource = import.meta.env.VITE_DATA_SOURCE?.toLowerCase();
-  const useMockApi =
-    dataSource === "mock" ||
-    (import.meta.env.DEV && import.meta.env.VITE_USE_REAL_API !== "true");
+  const useMockApi = ENABLE_MOCK_API;
 
   const persistAndNavigate = (prediction: PredictionResult) => {
     if (typeof window !== "undefined") {
@@ -35,6 +36,40 @@ const App = () => {
     }
     navigate("/intake/result", { state: { result: prediction } });
   };
+
+  useEffect(() => {
+    if (useMockApi) {
+      setHealthMessage("");
+      setHealthError(false);
+      return;
+    }
+    let isMounted = true;
+    const checkHealth = async () => {
+      try {
+        const { data } = await checkApiHealth();
+        if (!isMounted) return;
+        if (data?.status?.toLowerCase() === "ok") {
+          setHealthMessage("");
+          setHealthError(false);
+        } else {
+          setHealthMessage(
+            "Prediction service responded but did not report an OK status."
+          );
+          setHealthError(true);
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        setHealthMessage(
+          "Unable to reach the prediction service at http://localhost:8001/health."
+        );
+        setHealthError(true);
+      }
+    };
+    checkHealth();
+    return () => {
+      isMounted = false;
+    };
+  }, [useMockApi]);
 
   const handleSubmit = async (payload: PredictionPayload) => {
     setLoading(true);
@@ -98,6 +133,11 @@ const App = () => {
               Health Risk Command Center
             </Typography>
           </Stack>
+          {!useMockApi && healthError && healthMessage && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {healthMessage}
+            </Alert>
+          )}
           <HealthStepperForm
             onSubmit={handleSubmit}
             loading={loading}

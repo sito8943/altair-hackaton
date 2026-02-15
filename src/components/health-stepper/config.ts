@@ -1,7 +1,8 @@
-import type { HealthFormValues } from "../../types";
+import type { HealthFormField, HealthFormValues } from "../../types";
 import StepDemographics from "../StepDemographics";
 import StepVitals from "../StepVitals";
 import StepLifestyle from "../StepLifestyle";
+import { ENABLE_SOCIO_DEMO_FIELDS } from "../../config/featureFlags";
 import type { StepDefinition } from "./types";
 
 export const initialValues: HealthFormValues = {
@@ -32,17 +33,21 @@ export const routeMap = [
   "/intake/lifestyle",
 ];
 
-export const steps: StepDefinition[] = [
-  {
-    label: "Demographics",
-    component: StepDemographics,
-    fields: [
+const demographicFields = ENABLE_SOCIO_DEMO_FIELDS
+  ? [
       "age",
       "sex",
       "education_level",
       "employment_status",
       "marital_status",
-    ],
+    ]
+  : ["age", "sex"];
+
+export const steps: StepDefinition[] = [
+  {
+    label: "Demographics",
+    component: StepDemographics,
+    fields: demographicFields as HealthFormField[],
   },
   {
     label: "Vitals & Physical",

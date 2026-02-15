@@ -17,6 +17,7 @@ import {
   routeMap,
   steps,
 } from "./health-stepper/config";
+import { ENABLE_SOCIO_DEMO_FIELDS } from "../config/featureFlags";
 import StepperSidebar from "./health-stepper/StepperSidebar";
 import StepperMobile from "./health-stepper/StepperMobile";
 import NavigationControls from "./health-stepper/NavigationControls";
@@ -147,27 +148,37 @@ const HealthStepperForm = ({
     setResetDialogOpen(false);
   };
 
-  const formatPayload = (): PredictionPayload => ({
-    age: Number(values.age),
-    sex: values.sex,
-    education_level: values.education_level,
-    employment_status: values.employment_status,
-    marital_status: values.marital_status,
-    bmi: Number(values.bmi),
-    systolic_bp: Number(values.systolic_bp),
-    diastolic_bp: Number(values.diastolic_bp),
-    resting_heart_rate: Number(values.resting_heart_rate),
-    chronic_conditions_count: Number(values.chronic_conditions_count),
-    recent_weight_change: values.recent_weight_change,
-    physical_activity_days_per_week: Number(
-      values.physical_activity_days_per_week
-    ),
-    sleep_hours_avg: Number(values.sleep_hours_avg),
-    smoking_status: values.smoking_status,
-    alcohol_frequency: values.alcohol_frequency,
-    stress_level: Number(values.stress_level),
-    depressive_symptoms_score: Number(values.depressive_symptoms_score),
-  });
+  const formatPayload = (): PredictionPayload => {
+    const payload: PredictionPayload = {
+      age: Number(values.age),
+      sex: values.sex,
+      education_level: values.education_level,
+      employment_status: values.employment_status,
+      marital_status: values.marital_status,
+      bmi: Number(values.bmi),
+      systolic_bp: Number(values.systolic_bp),
+      diastolic_bp: Number(values.diastolic_bp),
+      resting_heart_rate: Number(values.resting_heart_rate),
+      chronic_conditions_count: Number(values.chronic_conditions_count),
+      recent_weight_change: values.recent_weight_change,
+      physical_activity_days_per_week: Number(
+        values.physical_activity_days_per_week
+      ),
+      sleep_hours_avg: Number(values.sleep_hours_avg),
+      smoking_status: values.smoking_status,
+      alcohol_frequency: values.alcohol_frequency,
+      stress_level: Number(values.stress_level),
+      depressive_symptoms_score: Number(values.depressive_symptoms_score),
+    };
+
+    if (!ENABLE_SOCIO_DEMO_FIELDS) {
+      delete payload.education_level;
+      delete payload.employment_status;
+      delete payload.marital_status;
+    }
+
+    return payload;
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

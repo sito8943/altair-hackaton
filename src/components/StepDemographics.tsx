@@ -10,12 +10,14 @@ import {
 import type { ChangeEvent } from "react";
 import type { HealthFormField, StepComponentProps } from "../types";
 import { formFieldStyles, glassPanelCardSx } from "../theme";
+import { ENABLE_SOCIO_DEMO_FIELDS } from "../config/featureFlags";
 
 type FieldEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 
 const sexOptions = ["Female", "Male", "Intersex / Other", "Prefer not to say"];
 const educationOptions = [
   "High school / GED",
+  "College",
   "Associate degree",
   "Bachelor's",
   "Master's",
@@ -89,72 +91,78 @@ const StepDemographics = ({ values, onChange, errors }: StepComponentProps) => {
               )}
             />
           </Box>
-          <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
-            <Autocomplete
-              fullWidth
-              options={educationOptions}
-              value={values.education_level || null}
-              onChange={(_, newValue) =>
-                onChange("education_level", newValue ?? "")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Education Level"
-                  placeholder="Select education"
-                  error={Boolean(errors.education_level)}
-                  helperText={
-                    errors.education_level || "Highest completed tier"
+          {ENABLE_SOCIO_DEMO_FIELDS && (
+            <>
+              <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
+                <Autocomplete
+                  fullWidth
+                  options={educationOptions}
+                  value={values.education_level || null}
+                  onChange={(_, newValue) =>
+                    onChange("education_level", newValue ?? "")
                   }
-                  sx={formFieldStyles}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Education Level"
+                      placeholder="Select education"
+                      error={Boolean(errors.education_level)}
+                      helperText={
+                        errors.education_level || "Highest completed tier"
+                      }
+                      sx={formFieldStyles}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Box>
-          <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
-            <Autocomplete
-              fullWidth
-              options={employmentOptions}
-              value={values.employment_status || null}
-              onChange={(_, newValue) =>
-                onChange("employment_status", newValue ?? "")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Employment Status"
-                  placeholder="Select status"
-                  error={Boolean(errors.employment_status)}
-                  helperText={
-                    errors.employment_status || "Current role or designation"
+              </Box>
+              <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
+                <Autocomplete
+                  fullWidth
+                  options={employmentOptions}
+                  value={values.employment_status || null}
+                  onChange={(_, newValue) =>
+                    onChange("employment_status", newValue ?? "")
                   }
-                  sx={formFieldStyles}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Employment Status"
+                      placeholder="Select status"
+                      error={Boolean(errors.employment_status)}
+                      helperText={
+                        errors.employment_status ||
+                        "Current role or designation"
+                      }
+                      sx={formFieldStyles}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Box>
-          <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
-            <Autocomplete
-              fullWidth
-              options={maritalOptions}
-              value={values.marital_status || null}
-              onChange={(_, newValue) =>
-                onChange("marital_status", newValue ?? "")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Marital Status"
-                  placeholder="Select status"
-                  error={Boolean(errors.marital_status)}
-                  helperText={
-                    errors.marital_status || "Household / relationship status"
+              </Box>
+              <Box sx={{ flex: "1 1 260px", minWidth: { xs: "100%", sm: 260 } }}>
+                <Autocomplete
+                  fullWidth
+                  options={maritalOptions}
+                  value={values.marital_status || null}
+                  onChange={(_, newValue) =>
+                    onChange("marital_status", newValue ?? "")
                   }
-                  sx={formFieldStyles}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Marital Status"
+                      placeholder="Select status"
+                      error={Boolean(errors.marital_status)}
+                      helperText={
+                        errors.marital_status ||
+                        "Household / relationship status"
+                      }
+                      sx={formFieldStyles}
+                    />
+                  )}
                 />
-              )}
-            />
-          </Box>
+              </Box>
+            </>
+          )}
         </Stack>
       </CardContent>
     </Card>

@@ -69,9 +69,9 @@ export type HealthFormErrors = Partial<Record<HealthFormField, string>>
 export interface PredictionPayload {
   age: number
   sex: string
-  education_level: string
-  employment_status: string
-  marital_status: string
+  education_level?: string
+  employment_status?: string
+  marital_status?: string
   bmi: number
   systolic_bp: number
   diastolic_bp: number

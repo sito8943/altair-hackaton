@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Box,
   Card,
   CardContent,
@@ -12,14 +11,6 @@ import type { HealthFormField, StepComponentProps } from "../types";
 import { formFieldStyles, glassPanelCardSx } from "../theme";
 
 type FieldEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-
-const weightChangeOptions = [
-  "Stable (<2kg)",
-  "Gained 2-5kg",
-  "Gained >5kg",
-  "Lost 2-5kg",
-  "Lost >5kg",
-];
 
 const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
   const handleChange = (event: FieldEvent) => {
@@ -62,18 +53,11 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             sx={formFieldStyles}
           />
           <Box sx={{ gridColumn: { xs: "span 1", sm: "span 2" } }}>
-            <Typography
-              variant="subtitle2"
-              color="text.secondary"
-              sx={{ mb: 1, fontWeight: 500 }}
-            >
-              Blood Pressure (mmHg)
-            </Typography>
             <Stack direction="row" spacing={2} alignItems="flex-start">
               <TextField
                 fullWidth
                 type="number"
-                label="Systolic"
+                label="Systolic (mmHg)"
                 placeholder="120"
                 name="systolic_bp"
                 value={values.systolic_bp}
@@ -83,22 +67,10 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
                 InputProps={{ inputProps: { min: 50, max: 260 } }}
                 sx={formFieldStyles}
               />
-              <Typography
-                variant="h4"
-                color="text.secondary"
-                sx={{
-                  alignSelf: "start",
-                  pt: 1,
-                  opacity: 0.5,
-                  fontWeight: 300,
-                }}
-              >
-                /
-              </Typography>
               <TextField
                 fullWidth
                 type="number"
-                label="Diastolic"
+                label="Diastolic (mmHg)"
                 placeholder="80"
                 name="diastolic_bp"
                 value={values.diastolic_bp}
@@ -139,28 +111,19 @@ const StepVitals = ({ values, onChange, errors }: StepComponentProps) => {
             InputProps={{ inputProps: { min: 0, max: 20 } }}
             sx={formFieldStyles}
           />
-          <Box
-            sx={{ gridColumn: { xs: "span 1", sm: "span 2", md: "span 3" } }}
-          >
-            <Autocomplete
-              fullWidth
-              options={weightChangeOptions}
-              value={values.recent_weight_change || null}
-              onChange={(_, newValue) =>
-                onChange("recent_weight_change", newValue ?? "")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Recent Weight Change"
-                  placeholder="Select change"
-                  error={Boolean(errors.recent_weight_change)}
-                  helperText={errors.recent_weight_change || "Prior 3 months"}
-                  sx={formFieldStyles}
-                />
-              )}
-            />
-          </Box>
+          <TextField
+            fullWidth
+            type="number"
+            label="Recent Weight Change"
+            placeholder="-1.5"
+            name="recent_weight_change"
+            value={values.recent_weight_change}
+            onChange={handleChange}
+            error={Boolean(errors.recent_weight_change)}
+            helperText={errors.recent_weight_change || "Prior 3 months (kg)"}
+            InputProps={{ inputProps: { step: 0.1 } }}
+            sx={formFieldStyles}
+          />
         </Box>
       </CardContent>
     </Card>
