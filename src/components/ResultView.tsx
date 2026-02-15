@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -225,8 +225,6 @@ const ResultView = () => {
       .join(", ")} and ${drivers[2]}.`;
   }, [riskFactors]);
 
-  const cardsContainerRef = useRef<HTMLDivElement | null>(null);
-  const [revealedIds, setRevealedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -238,41 +236,14 @@ const ResultView = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-    const container = cardsContainerRef.current;
-    if (!container) return undefined;
-    const panels = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-reveal-id]")
-    );
-    if (!panels.length) return undefined;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const elementId = entry.target.getAttribute("data-reveal-id");
-          if (!entry.isIntersecting || !elementId) return;
-          observer.unobserve(entry.target);
-          setRevealedIds((prev) => {
-            if (prev.has(elementId)) return prev;
-            const next = new Set(prev);
-            next.add(elementId);
-            return next;
-          });
-        });
-      },
-      { threshold: 0.18, rootMargin: "0px 0px -12% 0px" }
-    );
-    panels.forEach((panel) => {
-      const panelId = panel.getAttribute("data-reveal-id");
-      if (!panelId || revealedIds.has(panelId)) return;
-      observer.observe(panel);
-    });
-    return () => observer.disconnect();
-  }, [revealedIds, result]);
-
   const scrollToTop = () => {
     if (typeof window === "undefined") return;
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleExportPdf = () => {
+    if (typeof window === "undefined") return;
+    window.print();
   };
 
   const handleWhatIfChange =
@@ -281,18 +252,6 @@ const ResultView = () => {
       const numericValue = Array.isArray(value) ? value[0] : value;
       setWhatIfValues((prev) => ({ ...prev, [field]: numericValue }));
     };
-
-  let revealOrder = 0;
-  const getRevealProps = (id: string) => {
-    const delay = revealOrder * 90;
-    revealOrder += 1;
-    const isVisible = revealedIds.has(id);
-    return {
-      className: `card-reveal${isVisible ? " card-reveal-visible" : ""}`,
-      style: { transitionDelay: `${delay}ms` },
-      "data-reveal-id": id,
-    } as const;
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -355,19 +314,16 @@ const ResultView = () => {
                 <Button
                   variant="contained"
                   startIcon={<DownloadIcon />}
+                  onClick={handleExportPdf}
                   sx={{ textTransform: "none", fontWeight: 600, borderRadius: 100 }}
                 >
                   Exportar PDF
                 </Button>
               </Stack>
             </Stack>
-            <Box sx={dashboardGridSx} ref={cardsContainerRef}>
+            <Box sx={dashboardGridSx}>
               {/* Row 1 · Predictive summary spans 6/12 (~50%) */}
-              <Card
-                {...getRevealProps("predictive-summary")}
-                elevation={0}
-                sx={cardPlacementSx(6, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Stack spacing={2}>
                     <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -440,11 +396,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 1 · Risk gauge spans 6/12 (~50%) */}
-              <Card
-                {...getRevealProps("risk-gauge")}
-                elevation={0}
-                sx={cardPlacementSx(6, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Risk gauge
@@ -484,11 +436,7 @@ const ResultView = () => {
                     : TrendingDownIcon;
                   return (
                     <Grid item xs={12} key={disease.disease}>
-                      <Card
-                        {...getRevealProps(`disease-${disease.disease}`)}
-                        elevation={0}
-                        sx={panelCardSx}
-                      >
+                      <Card elevation={0} sx={panelCardSx}>
                         <CardContent>
                           <Stack
                             direction="row"
@@ -536,11 +484,7 @@ const ResultView = () => {
                 })}
                 {!diseaseCards.length && (
                   <Grid item xs={12}>
-                    <Card
-                      {...getRevealProps("disease-empty")}
-                      elevation={0}
-                      sx={panelCardSx}
-                    >
+                    <Card elevation={0} sx={panelCardSx}>
                       <CardContent>
                         <Typography color="text.secondary">
                           No disease-specific predictions available.
@@ -553,11 +497,7 @@ const ResultView = () => {
             </Box>
 
               {/* Row 3 · Risk radar spans 4/12 (~33%) */}
-              <Card
-                {...getRevealProps("risk-radar")}
-                elevation={0}
-                sx={cardPlacementSx(4, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Risk radar
@@ -606,11 +546,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 3 · What-if simulator spans 4/12 (~34%) */}
-              <Card
-                {...getRevealProps("what-if-simulator")}
-                elevation={0}
-                sx={cardPlacementSx(4, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     What-if simulator
@@ -684,11 +620,7 @@ const ResultView = () => {
               </Card>
 
               {/* Row 4 · Disease explainability spans 7/12 (~60%) */}
-              <Card
-                {...getRevealProps("disease-explainability")}
-                elevation={0}
-                sx={cardPlacementSx(7)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(7)}>
                 <CardContent>
                   <Stack spacing={2}>
                     <Typography variant="overline" sx={{ letterSpacing: 2 }}>
@@ -778,11 +710,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 4 · Data quality spans 5/12 (~40%) */}
-              <Card
-                {...getRevealProps("data-quality")}
-                elevation={0}
-                sx={cardPlacementSx(5)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(5)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Data quality & alerts
@@ -821,11 +749,7 @@ const ResultView = () => {
               </Card>
 
               {/* Row 5 · Fairness metrics spans 6/12 (~50%) */}
-              <Card
-                {...getRevealProps("fairness-transparency")}
-                elevation={0}
-                sx={cardPlacementSx(6, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Fairness & transparency
@@ -864,11 +788,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 5 · Vital signals spans 6/12 (~50%) */}
-              <Card
-                {...getRevealProps("vital-signals")}
-                elevation={0}
-                sx={cardPlacementSx(6, 1)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(6, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Vital signals
@@ -904,11 +824,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 6 · Actionable recommendations span full width */}
-              <Card
-                {...getRevealProps("actionable-recommendations")}
-                elevation={0}
-                sx={cardPlacementSx(12)}
-              >
+              <Card elevation={0} sx={cardPlacementSx(12)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Actionable recommendations
