@@ -153,7 +153,11 @@ const StepDot = ({ active, completed, className, icon }: StepIconProps) => (
   </Box>
 );
 
-const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormProps) => {
+const HealthStepperForm = ({
+  onSubmit,
+  loading,
+  apiError,
+}: HealthStepperFormProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const derivedStep = routeMap.indexOf(location.pathname);
@@ -234,8 +238,7 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
     setResetDialogOpen(true);
   };
 
-  const handleResetConfirm = () => {
-    setResetDialogOpen(false);
+  const resetFormState = () => {
     setValues(initialValues);
     setErrors({});
     setFormMessage("");
@@ -243,6 +246,11 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(FORM_STORAGE_KEY);
     }
+  };
+
+  const handleResetConfirm = () => {
+    setResetDialogOpen(false);
+    resetFormState();
   };
 
   const handleResetCancel = () => {
@@ -535,7 +543,7 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
         aria-describedby="reset-dialog-description"
         PaperProps={{
           sx: {
-            borderRadius: 3,
+            borderRadius: 1,
             boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
             border: "1px solid rgba(255, 255, 255, 0.2)",
           },
@@ -555,21 +563,25 @@ const HealthStepperForm = ({ onSubmit, loading, apiError }: HealthStepperFormPro
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button onClick={handleResetCancel} color="inherit" sx={{ fontWeight: 600 }}>
+          <Button
+            onClick={handleResetCancel}
+            color="inherit"
+            sx={{ fontWeight: 600, borderRadius: 100 }}
+          >
             Cancel
           </Button>
           <Button
             onClick={handleResetConfirm}
             color="error"
             variant="contained"
-            sx={{ fontWeight: 600, boxShadow: "none" }}
+            sx={{ fontWeight: 600, boxShadow: "none", borderRadius: 100 }}
             autoFocus
           >
-            Continue
+            Reset Form
           </Button>
         </DialogActions>
       </Dialog>
-    </Box >
+    </Box>
   );
 };
 
