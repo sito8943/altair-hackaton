@@ -1,3 +1,5 @@
+import { forwardRef } from "react";
+import type { ReactElement, Ref } from "react";
 import {
   Button,
   Dialog,
@@ -6,6 +8,22 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import Grow from "@mui/material/Grow";
+import type { TransitionProps } from "@mui/material/transitions";
+
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & { children: ReactElement<any, any> },
+  ref: Ref<unknown>
+) {
+  return (
+    <Grow
+      ref={ref}
+      {...props}
+      timeout={{ enter: 320, exit: 240 }}
+      style={{ transformOrigin: "center" }}
+    />
+  );
+});
 
 interface ResetConfirmationDialogProps {
   open: boolean;
@@ -21,6 +39,7 @@ const ResetConfirmationDialog = ({
   <Dialog
     open={open}
     onClose={onCancel}
+    TransitionComponent={Transition}
     aria-labelledby="reset-dialog-title"
     aria-describedby="reset-dialog-description"
     PaperProps={{
