@@ -60,7 +60,7 @@ const App = () => {
       } catch (err) {
         if (!isMounted) return;
         setHealthMessage(
-          "Unable to reach the prediction service at http://localhost:8001/health."
+          "Unable to reach the prediction service at http://162.244.29.98:8001/health."
         );
         setHealthError(true);
       }
