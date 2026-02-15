@@ -271,6 +271,7 @@ const ResultView = () => {
               justifyContent="space-between"
               alignItems={{ xs: "flex-start", md: "center" }}
               spacing={2}
+              className="print-hidden"
             >
               <Stack direction="row" spacing={2} alignItems="center">
                 <Box
@@ -911,6 +912,7 @@ const ResultView = () => {
         in={showScrollTop}
         timeout={{ enter: 260, exit: 200 }}
         unmountOnExit
+        className="print-hidden"
       >
         <IconButton
           aria-label="Volver arriba"
