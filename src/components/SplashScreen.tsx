@@ -210,12 +210,22 @@ const SplashScreen = () => {
             >
               <Box
                 component="img"
-                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80"
+                src="https://ik.imagekit.io/lgqp0wffgtp/tr:w-900/ia/portrait-professional-medical-worker-posing-picture-with-arms-folded(3)_sLmnFEShO.webp"
                 alt="Medical Intelligence"
                 sx={{
                   width: "100%",
                   height: "auto",
                   filter: "drop-shadow(0 30px 50px rgba(15,76,129,0.15))",
+                  maskImage: `
+      linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)
+    `,
+                  maskComposite: "intersect",
+                  WebkitMaskImage: `
+      linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)
+    `,
+                  WebkitMaskComposite: "source-in",
                 }}
               />
             </Box>
