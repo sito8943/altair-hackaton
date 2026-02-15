@@ -94,7 +94,7 @@ const SplashScreen = () => {
                   sx={{
                     width: 48,
                     height: 48,
-                    borderRadius: 3,
+                    borderRadius: 1,
                     bgcolor: brandColors.primary,
                     display: "flex",
                     alignItems: "center",
@@ -170,26 +170,26 @@ const SplashScreen = () => {
                 modules so your care team can act before risk escalates.
               </Typography>
 
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleBegin}
-                endIcon={<ArrowForwardIcon />}
-                sx={{
-                  py: 2,
-                  px: 4,
-                  borderRadius: 3,
-                  fontSize: "1.1rem",
-                  textTransform: "none",
-                  fontWeight: 700,
-                  backgroundColor: brandColors.primary,
-                  boxShadow: brandShadows.cta,
-                  "&:hover": { backgroundColor: brandColors.primaryDark },
-                  alignSelf: "flex-start",
-                }}
-              >
-                Launch Intake
-              </Button>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleBegin}
+                  endIcon={<ArrowForwardIcon />}
+                  sx={{
+                    py: 2,
+                    px: 4,
+                    borderRadius: 100,
+                    fontSize: "1.1rem",
+                    textTransform: "none",
+                    fontWeight: 700,
+                    backgroundColor: brandColors.primary,
+                    boxShadow: brandShadows.cta,
+                    "&:hover": { backgroundColor: brandColors.primaryDark },
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  Launch Intake
+                </Button>
             </Stack>
 
             <Box

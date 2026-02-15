@@ -318,7 +318,7 @@ const ResultView = () => {
                   sx={{
                     width: 48,
                     height: 48,
-                    borderRadius: 3,
+                    borderRadius: 1,
                     bgcolor: brandColors.primary,
                     display: "flex",
                     alignItems: "center",
@@ -348,13 +348,14 @@ const ResultView = () => {
                   variant="outlined"
                   startIcon={<ArrowBackIcon />}
                   onClick={() => navigate("/intake/demographics")}
+                  sx={{ borderRadius: 100 }}
                 >
                   Back to intake
                 </Button>
                 <Button
                   variant="contained"
                   startIcon={<DownloadIcon />}
-                  sx={{ textTransform: "none", fontWeight: 600 }}
+                  sx={{ textTransform: "none", fontWeight: 600, borderRadius: 100 }}
                 >
                   Exportar PDF
                 </Button>

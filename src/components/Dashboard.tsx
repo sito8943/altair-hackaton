@@ -48,7 +48,7 @@ const Dashboard = ({ result }: DashboardProps) => {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Card elevation={0} sx={{ borderRadius: 3, height: '100%' }}>
+          <Card elevation={0} sx={{ borderRadius: 1, height: '100%' }}>
             <CardContent>
               <Typography variant="subtitle2" color="text.secondary">
                 Main Risk Score
@@ -66,7 +66,7 @@ const Dashboard = ({ result }: DashboardProps) => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card elevation={0} sx={{ borderRadius: 3, height: '100%' }}>
+          <Card elevation={0} sx={{ borderRadius: 1, height: '100%' }}>
             <CardContent>
               <Typography variant="subtitle2" color="text.secondary">
                 Normalized Gauge (0-1)
@@ -76,7 +76,7 @@ const Dashboard = ({ result }: DashboardProps) => {
           </Card>
         </Grid>
         <Grid item xs={12} md={8}>
-          <Card elevation={0} sx={{ borderRadius: 3 }}>
+          <Card elevation={0} sx={{ borderRadius: 1 }}>
             <CardContent>
               <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                 Top Contributing Factors
@@ -99,7 +99,7 @@ const Dashboard = ({ result }: DashboardProps) => {
           </Card>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card elevation={0} sx={{ borderRadius: 3, height: '100%' }}>
+          <Card elevation={0} sx={{ borderRadius: 1, height: '100%' }}>
             <CardContent>
               <Typography variant="subtitle2" color="text.secondary">
                 Trend Signal

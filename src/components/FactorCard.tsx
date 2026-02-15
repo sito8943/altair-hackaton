@@ -10,7 +10,7 @@ const FactorCard = ({ factor }: FactorCardProps) => {
   const impactPercent = Math.round((factor.impact ?? 0) * 100)
 
   return (
-    <Card elevation={0} sx={{ borderRadius: 3, height: '100%' }}>
+    <Card elevation={0} sx={{ borderRadius: 1, height: '100%' }}>
       <CardContent>
         <Typography variant="subtitle1" fontWeight={600} gutterBottom>
           {factor.name}

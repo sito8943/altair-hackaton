@@ -30,7 +30,7 @@ export const glassPanelCardSx: SxProps<Theme> = {
 
 export const formFieldStyles: SxProps<Theme> = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: 3,
+    borderRadius: 1,
     backgroundColor: "#fff",
     transition: "all 0.3s ease",
     "& fieldset": { borderColor: "#e4ecf7" },

@@ -78,7 +78,7 @@ const App = () => {
               sx={{
                 width: 48,
                 height: 48,
-                borderRadius: 3,
+                borderRadius: 1,
                 bgcolor: brandColors.primary,
                 display: "flex",
                 alignItems: "center",
