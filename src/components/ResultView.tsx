@@ -497,12 +497,22 @@ const ResultView = () => {
             </Box>
 
               {/* Row 3 · Risk radar spans 4/12 (~33%) */}
-              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
+              <Card elevation={0} sx={{ ...panelCardSx, ...gridColumnSpan(7, 1) }}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     Risk radar
                   </Typography>
-                  <Box sx={{ height: 320, mt: 1 }}>
+                  <Box
+                    sx={{
+                      height: 320,
+                      mt: 1,
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      px: 1,
+                    }}
+                  >
                     {radarData.length ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <RadarChart
@@ -546,7 +556,7 @@ const ResultView = () => {
                 </CardContent>
               </Card>
               {/* Row 3 · What-if simulator spans 4/12 (~34%) */}
-              <Card elevation={0} sx={cardPlacementSx(4, 1)}>
+              <Card elevation={0} sx={cardPlacementSx(5, 1)}>
                 <CardContent>
                   <Typography variant="overline" sx={{ letterSpacing: 2 }}>
                     What-if simulator
