@@ -187,19 +187,33 @@ const HealthStepperForm = ({
   };
 
   return (
-    <Box component="section" aria-label="Health data intake form">
+    <Box
+      component="section"
+      aria-label="Health data intake form"
+      sx={{ flex: 1, display: "flex", flexDirection: "column" }}
+    >
       <Stack
         direction={{ xs: "column", md: "row" }}
         spacing={{ xs: 3, md: 5 }}
         alignItems="stretch"
+        sx={{ flex: 1 }}
       >
         <StepperSidebar steps={steps} activeStep={activeStep} />
-        <Box className="hsf-form-container" sx={{ flex: 1, minWidth: 0 }}>
+        <Box
+          className="hsf-form-container"
+          sx={{
+            flex: 1,
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Box
             component="form"
             onSubmit={handleSubmit}
             noValidate
             className="hsf-form"
+            sx={{ display: "flex", flexDirection: "column", flex: 1 }}
           >
             {formMessage && (
               <Alert severity="warning" className="hsf-alert" sx={{ mb: 2 }}>
@@ -211,7 +225,7 @@ const HealthStepperForm = ({
                 {apiError}
               </Alert>
             )}
-            <Box className="hsf-form-panel">
+            <Box className="hsf-form-panel" sx={{ flex: 1 }}>
               <Box className="hsf-reset-wrapper">
                 <ResetButton disabled={loading} onClick={handleResetClick} />
               </Box>
