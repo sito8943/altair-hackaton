@@ -1,11 +1,15 @@
 import axios from 'axios'
 import type { PredictionPayload, PredictionResult } from '../types'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://162.244.29.98:8001'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'https://laurinda-unterrified-magali.ngrok-free.dev/'
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  headers: {
+    'ngrok-skip-browser-warning': 'true',
+  },
 })
 
 const toSnakeCase = (key: string) =>
